@@ -105,16 +105,18 @@
     border: 1.5px solid var(--border);
     border-radius: 20px;
     padding: 16px 18px;
-    min-width: 200px;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
     cursor: pointer;
     transition: border-color 0.2s, transform 0.15s;
     flex-shrink: 0;
   }
   .goal-pill:hover { border-color: var(--tribe); transform: translateY(-2px); }
   .goal-pill.checked { border-color: var(--tribe); background: #F0FAF5; }
-  .goal-pill-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .goal-pill-name { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; max-width: 130px; }
-  .goal-type-badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 10px; }
+  .goal-pill-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+  .goal-pill-name { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .goal-type-badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 10px; flex-shrink: 0; white-space: nowrap; }
   .badge-fitness { background: var(--lightest); color: var(--forest); }
   .badge-habit { background: #EBF4FF; color: #1A5FA8; }
   .badge-nutrition { background: #FFF4E6; color: #8B5400; }
@@ -363,6 +365,14 @@
   .lift-label { font-size:11px; font-weight:600; color:var(--muted); display:block; margin-bottom:5px; }
   .lift-inp { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:12px; font-size:16px; font-weight:700; color:var(--text); background:white; outline:none; font-family:'DM Sans',sans-serif; text-align:center; transition:border-color 0.2s; }
   .lift-inp:focus { border-color:var(--tribe); }
+
+  .drum-wrap { display:flex; flex-direction:column; align-items:center; gap:0; }
+  .drum-picker { width:100%; height:120px; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; border:1.5px solid var(--border); border-radius:12px; background:white; position:relative; scrollbar-width:none; }
+  .drum-picker::-webkit-scrollbar { display:none; }
+  .drum-picker.active { border-color:var(--tribe); }
+  .drum-item { height:40px; display:flex; align-items:center; justify-content:center; scroll-snap-align:center; font-size:20px; font-weight:700; color:var(--muted); cursor:pointer; transition:color 0.1s; flex-shrink:0; }
+  .drum-item.selected { color:var(--forest); font-size:24px; }
+  .drum-highlight { position:absolute; top:50%; left:0; right:0; height:40px; transform:translateY(-50%); border-top:2px solid var(--tribe); border-bottom:2px solid var(--tribe); pointer-events:none; border-radius:0; }
   .lift-unit { font-size:11px; color:var(--muted); text-align:center; margin-top:4px; font-weight:500; }
   .lift-calc-display { background:white; border:1.5px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
   .lift-calc-label { font-size:12px; color:var(--muted); font-weight:500; }
@@ -395,6 +405,19 @@
   .plank-start-btn:disabled { background:var(--border); color:var(--muted); cursor:default; }
   .plank-end-btn { flex:1; padding:13px; border:none; border-radius:14px; background:#E05C5C; color:white; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:none; }
   .plank-end-btn:hover { background:#b84545; }
+
+  .plank-mode-toggle { display:flex; background:rgba(8,80,65,0.08); border-radius:12px; padding:3px; margin-bottom:14px; }
+  .plank-mode-btn { flex:1; padding:9px; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .plank-mode-btn.active { background:white; color:var(--forest); box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+  .plank-manual-section { display:none; }
+  .plank-manual-section.show { display:block; }
+  .plank-timer-section { display:block; }
+  .plank-timer-section.hide { display:none; }
+  .plank-manual-inp { width:100%; padding:14px; border:1.5px solid var(--border); border-radius:12px; font-size:28px; font-weight:700; color:var(--text); background:white; outline:none; font-family:'DM Sans',sans-serif; text-align:center; margin-bottom:8px; transition:border-color 0.2s; }
+  .plank-manual-inp:focus { border-color:var(--tribe); }
+  .plank-manual-log-btn { width:100%; padding:12px; border:none; border-radius:12px; background:var(--tribe); color:white; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
+  .plank-manual-log-btn:hover { background:var(--forest); }
+  .plank-manual-log-btn:disabled { background:var(--border); color:var(--muted); cursor:default; }
   .plank-progress-section { margin-top:4px; }
   .plank-prog-label { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:500; }
   .plank-prog-label strong { color:var(--forest); }
@@ -440,7 +463,7 @@
   .route-hist-left { color:var(--text); font-weight:500; }
   .route-hist-right { color:var(--tribe); font-weight:700; }
 
-  .row-logger { margin-top:12px; background:var(--bg); border-radius:14px; padding:14px; }
+  .row-logger { margin-top:12px; background:var(--bg); border-radius:14px; padding:14px; overflow:hidden; box-sizing:border-box; }
   .row-logger-title { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
   .row-machine-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
   .row-machine-btn { padding:10px 8px; border:1.5px solid var(--border); border-radius:12px; background:white; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; color:var(--muted); text-align:center; transition:all 0.2s; }
@@ -452,7 +475,9 @@
   .row-log-btn { width:100%; padding:12px; border:none; border-radius:12px; background:var(--tribe); color:white; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
   .row-log-btn:hover { background:var(--forest); }
   .row-log-btn:disabled { background:var(--border); color:var(--muted); cursor:default; }
-  .row-hist-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; background:white; padding:6px 10px; border-radius:8px; }
+  .row-hist-row { display:flex; justify-content:space-between; align-items:center; font-size:12px; background:white; padding:6px 10px; border-radius:8px; overflow:hidden; box-sizing:border-box; width:100%; gap:8px; }
+  .row-hist-row span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+  .row-hist-row span:last-child { flex-shrink:0; }
 
   .tribe-totals-box { margin-top:12px; background:var(--forest); border-radius:14px; padding:14px 16px; }
   .tribe-totals-title { font-size:11px; font-weight:700; color:var(--pale); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
@@ -481,6 +506,20 @@
   .ct-challenge-row-info { flex:1; }
   .ct-challenge-row-name { font-size:14px; font-weight:700; color:var(--text); }
   .ct-challenge-row-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+
+  .goal-cat-header { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--forest); border-radius:14px; margin-bottom:6px; cursor:pointer; }
+  .goal-cat-label { font-size:14px; font-weight:700; color:white; }
+  .goal-cat-desc { font-size:11px; color:var(--pale); margin-top:1px; }
+  .goal-cat-arrow { font-size:12px; color:var(--pale); transition:transform 0.2s; }
+  .goal-cat-arrow.open { transform:rotate(90deg); }
+  .goal-cat-body { display:none; flex-direction:column; gap:6px; margin-bottom:12px; padding:0 2px; }
+  .goal-cat-body.open { display:flex; }
+  .goal-sub-label { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; padding:4px 2px 2px; }
+  .goal-tag { font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; flex-shrink:0; }
+  .tag-epic { background:#FDE8E8; color:#9B1F1F; }
+  .tag-weekly { background:#E1F5EE; color:#085041; }
+  .tag-race { background:#FFF4E6; color:#8B5400; }
+  .tag-common { background:#EBF4FF; color:#1A5FA8; }
 
   .phone-row { display:flex; gap:8px; align-items:center; }
   .phone-inp { flex:1; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-size:15px; color:var(--text); background:white; outline:none; font-family:'DM Sans',sans-serif; }
@@ -751,9 +790,6 @@
         <p>Track and check in on your commitments</p>
       </div>
       <div style="padding:0 24px; display:flex; flex-direction:column; gap:14px;" id="goals-full"></div>
-      <div style="padding:16px 24px;">
-        <button onclick="openModal('add-goal')" style="width:100%;padding:14px;border:2px dashed var(--border);border-radius:18px;background:transparent;font-size:15px;color:var(--tribe);font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Add a new goal</button>
-      </div>
       <div class="spacer"></div>
     </div>
 
@@ -921,33 +957,8 @@
           <div style="display:flex;flex-direction:column;gap:10px;" id="challenge-list"></div>
         </div>
 
-        <!-- CUSTOM GOAL -->
-        <div id="custom-goal-form" style="display:none;">
-          <div class="form-grp">
-            <label class="form-lbl">Goal name</label>
-            <input class="form-inp" id="new-goal-name" placeholder="e.g. Run 3x per week" />
-          </div>
-          <div class="form-grp">
-            <label class="form-lbl">Category</label>
-            <select class="form-sel" id="new-goal-type">
-              <option value="fitness">🏃 Fitness</option>
-              <option value="habit">⚡ Habit</option>
-              <option value="nutrition">🥗 Nutrition</option>
-            </select>
-          </div>
-          <div class="form-grp">
-            <label class="form-lbl">Share with tribe</label>
-            <select class="form-sel" id="new-goal-tribe">
-              <option>Morning Runners</option>
-              <option>Mindful Movers</option>
-              <option>Just me (private)</option>
-            </select>
-          </div>
-          <div class="modal-btns">
-            <button class="btn-cancel" onclick="closeModal('add-goal')">Cancel</button>
-            <button class="btn-primary" onclick="saveGoal()">Add goal</button>
-          </div>
-        </div>
+        <!-- CUSTOM GOAL — leader only -->
+        <div id="custom-goal-form" style="display:none;"></div>
       </div>
 
       <!-- View 2: Challenge detail -->
@@ -984,27 +995,12 @@
           <input class="form-inp" id="new-tribe-name" placeholder="e.g. The Iron Five" />
         </div>
         <div class="form-grp">
-          <label class="form-lbl">Tribe emoji</label>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;padding:4px 0;">
-            <span class="emoji-pick selected" onclick="pickEmoji(this,'🏋️')">🏋️</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🏃')">🏃</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🚴')">🚴</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🧘')">🧘</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🥗')">🥗</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🔥')">🔥</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'⚡')">⚡</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🚣')">🚣</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'🛣️')">🛣️</span>
-            <span class="emoji-pick" onclick="pickEmoji(this,'💪')">💪</span>
-          </div>
-        </div>
-        <div class="form-grp">
           <label class="form-lbl">Description (optional)</label>
           <input class="form-inp" id="new-tribe-desc" placeholder="What is this tribe about?" />
         </div>
         <div class="modal-btns">
           <button class="btn-cancel" onclick="closeModal('create-tribe')">Cancel</button>
-          <button class="btn-primary" onclick="ctNext(1)">Next → Pick goals</button>
+          <button class="btn-primary" onclick="ctNext(1)">Next → Select Goals</button>
         </div>
       </div>
 
@@ -1019,10 +1015,9 @@
           <span style="font-size:12px;color:var(--muted);font-weight:500;">Step 2 of 3</span>
         </div>
         <button onclick="ctBack(2)" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--tribe);font-weight:600;font-family:'DM Sans',sans-serif;margin-bottom:12px;padding:0;">← Back</button>
-        <div class="modal-title" style="margin-bottom:6px;">Pick tribe goals</div>
-        <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">Choose the challenges your tribe will tackle. Members will pick from these when they join.</p>
-        <div style="display:flex;flex-direction:column;gap:10px;" id="ct-challenge-list"></div>
-        <div style="margin-top:16px;padding:14px;border:1.5px dashed var(--border);border-radius:16px;text-align:center;font-size:14px;color:var(--muted);font-weight:500;cursor:pointer;" onclick="showToast('Custom challenge builder coming soon!')">+ Add a custom challenge</div>
+        <div class="modal-title" style="margin-bottom:4px;">Select Goals</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Choose which goals your tribe will tackle. Members get all activated goals.</p>
+        <div id="ct-challenge-list"></div>
         <div class="modal-btns" style="margin-top:16px;">
           <button class="btn-cancel" onclick="closeModal('create-tribe')">Cancel</button>
           <button class="btn-primary" onclick="ctNext(2)">Next → Invite members</button>
@@ -1060,6 +1055,77 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Add Tribe Goal Modal -->
+  <div class="modal-backdrop" id="modal-add-tribe-goal">
+    <div class="modal-sheet" style="max-height:92%;overflow-y:auto;">
+      <div class="modal-handle"></div>
+
+      <!-- View 1: Choose existing or custom -->
+      <div id="atg-view-browse">
+        <div class="modal-title">Add a goal</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button class="goal-type-toggle active" id="atg-tab-existing" onclick="switchAtgTab('existing')">📋 From catalog</button>
+          <button class="goal-type-toggle" id="atg-tab-custom" onclick="switchAtgTab('custom')">✏️ Custom goal</button>
+        </div>
+
+        <!-- Existing catalog goals -->
+        <div id="atg-existing">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Choose from the goal catalog. Goals already in your tribe are hidden.</p>
+          <div id="add-tribe-goal-list" style="display:flex;flex-direction:column;gap:0;"></div>
+        </div>
+
+        <!-- Custom goal form -->
+        <div id="atg-custom" style="display:none;">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Create a custom goal for your tribe. Members will see it right away.</p>
+
+          <div class="form-grp">
+            <label class="form-lbl">Goal name</label>
+            <input class="form-inp" id="custom-goal-name" placeholder="e.g. Walk 10,000 steps daily" />
+          </div>
+
+          <div class="form-grp">
+            <label class="form-lbl">Category</label>
+            <div style="display:flex;flex-direction:column;gap:8px;" id="custom-cat-picker">
+              <div class="custom-cat-btn selected" id="custom-cat-collab" onclick="selectCustomCat('collaboration')" style="border:1.5px solid var(--tribe);background:var(--lightest);border-radius:14px;padding:12px 14px;cursor:pointer;">
+                <div style="font-size:14px;font-weight:700;color:var(--forest);">🤝 Collaboration</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Tribe works together toward a shared target</div>
+              </div>
+              <div class="custom-cat-btn" id="custom-cat-comp" onclick="selectCustomCat('competition')" style="border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;cursor:pointer;">
+                <div style="font-size:14px;font-weight:700;color:var(--text);">🏆 Competition</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Individual race — first to hit the target wins</div>
+              </div>
+              <div class="custom-cat-btn" id="custom-cat-common" onclick="selectCustomCat('common')" style="border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;cursor:pointer;">
+                <div style="font-size:14px;font-weight:700;color:var(--text);">📋 Common</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Activated for all members — resets every Monday</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grp">
+            <label class="form-lbl">Target</label>
+            <input class="form-inp" id="custom-goal-target" placeholder="e.g. 30 mins, 5 sessions, 1000 steps" />
+          </div>
+
+          <div class="form-grp">
+            <label class="form-lbl">Emoji</label>
+            <input class="form-inp" id="custom-goal-emoji" placeholder="🎯" maxlength="2" style="font-size:24px;text-align:center;" />
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <input type="checkbox" id="custom-goal-weekly" style="width:18px;height:18px;cursor:pointer;" />
+            <label for="custom-goal-weekly" style="font-size:14px;color:var(--text);cursor:pointer;font-weight:500;">Resets every Monday</label>
+          </div>
+
+          <button onclick="saveCustomTribeGoal()" style="width:100%;padding:14px;border:none;border-radius:14px;background:var(--forest);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Add to tribe</button>
+        </div>
+
+        <div class="modal-btns" style="margin-top:12px;">
+          <button class="btn-cancel" onclick="closeModal('add-tribe-goal')">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1255,7 +1321,7 @@ var goals = [];
 /* ── TRIBE CHALLENGE SHARED PROGRESS ── */
 var tribeProgress = {
   'c1': { challengeId:'c1', name:'Lift 16 Tons', targetLbs:32000, members:[] },
-  'c2': { challengeId:'c2', name:'Plank 9 to 5', targetSecs:8*3600, members:[] },
+  'c2': { challengeId:'c2', name:'Planking 9 to 5', targetSecs:8*3600, members:[] },
   'c3': { challengeId:'c3', name:'Row the Longest Day', targetMeters:34000, members:[] },
   'c4': { challengeId:'c4', name:'Get Your Kicks on Route 66', targetMiles:2448, members:[] }
 };
@@ -1320,80 +1386,83 @@ function tribeMemberRow(m, logType) {
 }
 
 /* ── TRIBE CHALLENGES ── */
-var tribeChallenges = [
-  {
-    id:'c1', emoji:'🏋️', name:'Lift 16 Tons', difficulty:'epic', diffClass:'diff-epic',
-    target:'16 tons total lifted', unit:'tons lifted', targetVal:16,
-    duration:'No time limit', tribe:'Strength Squad',
-    description:'The classic Tennessee Ernie Ford challenge. Accumulate 16 tons (32,000 lbs / 14,515 kg) of total weight lifted across any exercises. Log your lifts, the tribe keeps count. Another day older, another ton closer.',
-    stats:[{num:'16 tons',lbl:'Total target'},{num:'32,000 lbs',lbl:'Imperial weight'},{num:'Open',lbl:'Duration'},{num:'Any lift',lbl:'Exercise type'}],
-    modes:null, selectedMode:null, type:'fitness', logType:'lift'
+/* ── GOAL CATALOG ── */
+var goalCatalog = {
+  collaboration: {
+    label: '🤝 Collaboration', desc: 'Tribe works together toward a shared target',
+    epic: [
+      { id:'c2', emoji:'🧱', name:'Planking 9 to 5', sub:'Accumulate 8 hrs of plank time — together', type:'fitness', logType:'plank', resetWeekly:false, targetVal:28800, targetLabel:'8 hours', unit:'secs' },
+      { id:'c3', emoji:'🚣', name:'Row the Channel', sub:'Row 34,000 meters as a tribe', type:'fitness', logType:'row', resetWeekly:false, targetVal:34000, targetLabel:'34,000 m', unit:'m' },
+      { id:'c4', emoji:'🛣️', name:'Route 66', sub:'Cover 2,448 miles — run, bike, or walk', type:'fitness', logType:'route66', resetWeekly:false, targetVal:2448, targetLabel:'2,448 mi', unit:'mi' }
+    ],
+    weekly: [
+      { id:'c1', emoji:'🏋️', name:'Lift 16 Tons', sub:'Tribe lifts 16 tons per week — resets Monday', type:'fitness', logType:'lift', resetWeekly:true, targetVal:32000, targetLabel:'16 tons', unit:'lbs' }
+    ]
   },
-  {
-    id:'c2', emoji:'🧱', name:'Plank 9 to 5', difficulty:'hard', diffClass:'diff-hard',
-    target:'Accumulate 8 hrs total plank time', unit:'minutes planked', targetVal:480,
-    duration:'No time limit', tribe:'Strength Squad',
-    description:'Hold the line from 9 to 5 — accumulate a full working day (8 hours) of total plank time. Log every set, every second counts. Your core will never be the same.',
-    stats:[{num:'8 hours',lbl:'Total target'},{num:'480 min',lbl:'Minutes to log'},{num:'Open',lbl:'Duration'},{num:'Any plank',lbl:'Variation'}],
-    modes:null, selectedMode:null, type:'fitness', logType:'plank'
+  competition: {
+    label: '🏆 Competition', desc: 'First member to hit the goal wins',
+    goals: [
+      { id:'cp1', emoji:'👟', name:'Steps to 100K', sub:'First member to 100,000 steps wins', type:'fitness', logType:'steps', resetWeekly:false, targetVal:100000, targetLabel:'100,000 steps', unit:'steps' },
+      { id:'cp2', emoji:'⏱️', name:'First to 1 Hour Plank', sub:'First member to accumulate 60 mins total wins', type:'fitness', logType:'plank-race', resetWeekly:false, targetVal:3600, targetLabel:'60 minutes', unit:'secs' }
+    ]
   },
-  {
-    id:'c3', emoji:'🚣', name:'Row the Longest Day', difficulty:'epic', diffClass:'diff-epic',
-    target:'Row 34,000 m — the English Channel', unit:'meters rowed', targetVal:34000,
-    duration:'No time limit', tribe:'Morning Runners',
-    description:'Cross the English Channel without leaving dry land. 34,000 metres — log every session on any machine: erg, water rower, Concept2. Your tribe tracks every stroke.',
-    stats:[{num:'34,000 m',lbl:'Total target'},{num:'34 km',lbl:'Distance'},{num:'Open',lbl:'Duration'},{num:'Any rower',lbl:'Equipment'}],
-    modes:null, selectedMode:null, type:'fitness', logType:'row'
-  },
-  {
-    id:'c4', emoji:'🛣️', name:'Get Your Kicks on Route 66', difficulty:'epic', diffClass:'diff-epic',
-    target:'Cover 2,448 miles — the full length of Route 66', unit:'miles covered', targetVal:2448,
-    duration:'No time limit', tribe:'Morning Runners',
-    description:'From Chicago to Santa Monica — the Mother Road in full. 2,448 miles of legendary American highway. Choose your mode and rack up the miles with your tribe. No car required.',
-    stats:[{num:'2,448 mi',lbl:'Total distance'},{num:'3,940 km',lbl:'Metric'},{num:'Open',lbl:'Duration'},{num:'Team effort',lbl:'Style'}],
-    modes:['🏃 Run','🚴 Bike','🚶 Walk'], selectedMode:'🏃 Run', type:'fitness', logType:'route66'
+  common: {
+    label: '📋 Common', desc: 'Activated for all members — resets every Monday',
+    goals: [
+      { id:'cm1', emoji:'🧘', name:'Stretch 2x Per Week', sub:'Every member logs 2 stretch sessions per week', type:'habit', logType:'stretch', resetWeekly:true, targetVal:2, targetLabel:'2 sessions', unit:'sessions' },
+      { id:'cm2', emoji:'🏃', name:'100 Air Squats Per Week', sub:'Every member completes 100 air squats per week', type:'fitness', logType:'airsquats', resetWeekly:true, targetVal:100, targetLabel:'100 squats', unit:'squats' }
+    ]
   }
-];
+};
+
+/* flat list for backward compat */
+var tribeChallenges = [].concat(
+  goalCatalog.collaboration.epic,
+  goalCatalog.collaboration.weekly,
+  goalCatalog.competition.goals,
+  goalCatalog.common.goals
+);
 
 var selectedChallenge = null;
 
 function renderChallengePicker() {
   var html = tribeChallenges.map(function(c){
+    var tagLabel = c.resetWeekly ? 'WEEKLY' : 'EPIC';
+    var tagClass = c.resetWeekly ? 'diff-hard' : 'diff-epic';
+    if(c.id.indexOf('cp')===0) { tagLabel='RACE'; tagClass='diff-epic'; }
+    if(c.id.indexOf('cm')===0) { tagLabel='COMMON'; tagClass='diff-hard'; }
     return '<div class="challenge-card" onclick="openChallengeDetail(\''+c.id+'\')">'+
       '<div class="challenge-emoji">'+c.emoji+'</div>'+
       '<div class="challenge-info">'+
         '<div class="challenge-name">'+c.name+'</div>'+
-        '<div class="challenge-meta">'+c.target+'</div>'+
+        '<div class="challenge-meta">'+c.sub+'</div>'+
       '</div>'+
-      '<div class="challenge-difficulty '+c.diffClass+'">'+c.difficulty.toUpperCase()+'</div>'+
+      '<div class="challenge-difficulty '+tagClass+'">'+tagLabel+'</div>'+
     '</div>';
   }).join('');
-  document.getElementById('challenge-list').innerHTML = html;
+  var el = document.getElementById('challenge-list');
+  if(el) el.innerHTML = html;
 }
 
 function openChallengeDetail(id) {
   selectedChallenge = tribeChallenges.find(function(c){ return c.id===id; });
   if(!selectedChallenge) return;
   var c = selectedChallenge;
-  var statsHtml = c.stats.map(function(s){
-    return '<div class="cstat"><div class="cstat-num">'+s.num+'</div><div class="cstat-lbl">'+s.lbl+'</div></div>';
-  }).join('');
-  var modesHtml = c.modes ? '<div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Choose your mode</div><div class="challenge-modes">'+
-    c.modes.map(function(m){
-      return '<button class="mode-tag'+(m===c.selectedMode?' selected':'')+'" onclick="selectMode(this,\''+m+'\')">'+m+'</button>';
-    }).join('')+'</div>' : '';
+  var resetNote = c.resetWeekly ? '<div style="font-size:12px;color:var(--tribe);margin-top:8px;font-weight:600;">⏰ Resets every Monday</div>' : '';
+  var cat = c.id.indexOf('cp')===0 ? '🏆 Competition — Race' : c.id.indexOf('cm')===0 ? '📋 Common Goal' : c.resetWeekly ? '🤝 Collaboration — Weekly' : '🤝 Collaboration — Epic';
   document.getElementById('challenge-detail-content').innerHTML =
     '<div class="challenge-detail-hero">'+
       '<div class="challenge-detail-emoji">'+c.emoji+'</div>'+
       '<div class="challenge-detail-title">'+c.name+'</div>'+
-      '<div class="challenge-detail-sub">'+c.tribe+' challenge</div>'+
+      '<div class="challenge-detail-sub">'+cat+'</div>'+
     '</div>'+
-    '<div class="challenge-stats">'+statsHtml+'</div>'+
-    '<div class="challenge-desc">'+c.description+'</div>'+
-    modesHtml;
+    '<div class="challenge-stats"><div class="cstat"><div class="cstat-num">'+c.targetLabel+'</div><div class="cstat-lbl">Target</div></div></div>'+
+    '<div class="challenge-desc">'+c.sub+'</div>'+
+    resetNote;
   document.getElementById('goal-view-type').style.display = 'none';
   document.getElementById('goal-view-detail').style.display = 'block';
 }
+
 
 function selectMode(el, mode) {
   if(selectedChallenge) selectedChallenge.selectedMode = mode;
@@ -1426,19 +1495,60 @@ function acceptChallenge() {
   showToast(c.emoji+' Challenge accepted! Your tribe is watching.');
 }
 
+function renderCustomGoalForm() {
+  var leaderPacts = myPacts.filter(function(p){ return p.isLeader; });
+  var tribeOptions = leaderPacts.map(function(p){
+    return '<option value="'+p.id+'">'+p.emoji+' '+p.name+'</option>';
+  }).join('');
+  var form = document.getElementById('custom-goal-form');
+  if(!form) return;
+  form.innerHTML =
+    '<div class="form-grp">' +
+      '<label class="form-lbl">Goal name</label>' +
+      '<input class="form-inp" id="new-goal-name" placeholder="e.g. Walk 10,000 steps daily" />' +
+    '</div>' +
+    '<div class="form-grp">' +
+      '<label class="form-lbl">Category</label>' +
+      '<select class="form-sel" id="new-goal-type">' +
+        '<option value="fitness">🏃 Fitness</option>' +
+        '<option value="habit">⚡ Habit</option>' +
+        '<option value="nutrition">🥗 Nutrition</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="form-grp">' +
+      '<label class="form-lbl">Add to tribe</label>' +
+      '<select class="form-sel" id="new-goal-tribe-id">' +
+        tribeOptions +
+      '</select>' +
+    '</div>' +
+    '<div class="modal-btns">' +
+      '<button class="btn-cancel" onclick="closeModal(\'add-goal\')">Cancel</button>' +
+      '<button class="btn-primary" onclick="saveGoal()">Add to tribe</button>' +
+    '</div>';
+}
+
 function switchGoalView(view) {
+  var isLeader = myPacts.some(function(p){ return p.isLeader; });
   document.getElementById('gtog-challenge').classList.toggle('active', view==='challenge');
   document.getElementById('gtog-custom').classList.toggle('active', view==='custom');
   document.getElementById('challenge-picker').style.display = view==='challenge' ? 'block' : 'none';
-  document.getElementById('custom-goal-form').style.display = view==='custom' ? 'block' : 'none';
+  if(view === 'custom') {
+    if(!isLeader) {
+      openPremiumGate('goals');
+      document.getElementById('gtog-challenge').classList.add('active');
+      document.getElementById('gtog-custom').classList.remove('active');
+      document.getElementById('challenge-picker').style.display = 'block';
+      document.getElementById('custom-goal-form').style.display = 'none';
+      return;
+    }
+    renderCustomGoalForm();
+    document.getElementById('custom-goal-form').style.display = 'block';
+  } else {
+    document.getElementById('custom-goal-form').style.display = 'none';
+  }
 }
 
-var feedItems = [
-  { id:1, av:'AL', avc:'av-a', name:'Alex L.', time:'2 min ago', tribe:'Morning Runners', msg:'Just crushed a 5k! Day 8 in a row. Who else is up early grinding? 💪', likes:4, liked:false, comments:2 },
-  { id:2, av:'MK', avc:'av-b', name:'Maya K.', time:'1 hr ago', tribe:'Mindful Movers', msg:'20 minutes of meditation before the chaos. Highly recommend starting your day this way.', likes:7, liked:false, comments:3 },
-  { id:3, av:'RJ', avc:'av-c', name:'Rico J.', time:'3 hrs ago', tribe:'Clean Eaters', msg:'Finally hit my nutrition goal for the whole week! Meal prepped on Sunday and it paid off big. 🥗', likes:12, liked:true, comments:5 },
-  { id:4, av:'SE', avc:'av-d', name:'Sam E.', time:'5 hrs ago', tribe:'Morning Runners', msg:'Missed yesterday but back at it today. 30 min strength session done. The tribe keeps me honest!', likes:9, liked:false, comments:1 }
-];
+var feedItems = [];
 
 var tribes = [];
 var allTribes = [];
@@ -1452,7 +1562,19 @@ function goalCard(g, fullView) {
   var loggerHtml = '';
   if(g.logType === 'lift') {
     syncMyProgress(g);
-    var tribeTotal = getTribeTotal('c1', 'liftedLbs');
+    syncPactTotals();
+    var pactActLift = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c1') pactActLift=a; }); });
+    var weights = [45,55,65,75,85,95,105,115,125,135,145,155,165,175,185,195,205,215,225,235,245,255,265,275,285,295,315,335,355,405];
+    var repsList = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+    var defaultW = 135, defaultR = 10;
+    var weightItems = '<div style="height:40px;flex-shrink:0;"></div>' +
+      weights.map(function(w){ return '<div class="drum-item'+(w===defaultW?' selected':'')+'" data-val="'+w+'">'+w+'</div>'; }).join('') +
+      '<div style="height:40px;flex-shrink:0;"></div>';
+    var repItems = '<div style="height:40px;flex-shrink:0;"></div>' +
+      repsList.map(function(r){ return '<div class="drum-item'+(r===defaultR?' selected':'')+'" data-val="'+r+'">'+r+'</div>'; }).join('') +
+      '<div style="height:40px;flex-shrink:0;"></div>';
+    var tribeTotal = pactActLift ? pactActLift.tribeTotal : (g.liftedLbs || 0);
     var liftedTons = (g.liftedLbs / 2000).toFixed(2);
     var tribeTons = (tribeTotal / 2000).toFixed(2);
     var targetTons = 16;
@@ -1476,20 +1598,32 @@ function goalCard(g, fullView) {
         '<div class="lift-inputs">' +
           '<div class="lift-field">' +
             '<label class="lift-label">Weight</label>' +
-            '<input class="lift-inp" id="lift-weight-'+g.id+'" type="number" placeholder="135" min="1" oninput="calcLift('+g.id+')" />' +
+            '<div class="drum-wrap">' +
+              '<div class="drum-picker" id="drum-weight-'+g.id+'" onscroll="onDrumScroll(\'weight\','+g.id+')">' +
+                '<div class="drum-highlight"></div>' +
+                weightItems +
+              '</div>' +
+            '</div>' +
             '<div class="lift-unit">lbs</div>' +
+            '<input type="hidden" id="lift-weight-'+g.id+'" value="135" />' +
           '</div>' +
-          '<div style="font-size:20px;color:var(--muted);padding-bottom:20px;">×</div>' +
+          '<div style="font-size:20px;color:var(--muted);padding-bottom:20px;padding-top:40px;">×</div>' +
           '<div class="lift-field">' +
             '<label class="lift-label">Reps</label>' +
-            '<input class="lift-inp" id="lift-reps-'+g.id+'" type="number" placeholder="10" min="1" oninput="calcLift('+g.id+')" />' +
+            '<div class="drum-wrap">' +
+              '<div class="drum-picker" id="drum-reps-'+g.id+'" onscroll="onDrumScroll(\'reps\','+g.id+')">' +
+                '<div class="drum-highlight"></div>' +
+                repItems +
+              '</div>' +
+            '</div>' +
             '<div class="lift-unit">reps</div>' +
+            '<input type="hidden" id="lift-reps-'+g.id+'" value="10" />' +
           '</div>' +
-          '<div style="font-size:20px;color:var(--muted);padding-bottom:20px;">=</div>' +
+          '<div style="font-size:20px;color:var(--muted);padding-bottom:20px;padding-top:40px;">=</div>' +
           '<div class="lift-field">' +
             '<label class="lift-label">Set total</label>' +
             '<div style="text-align:center;">' +
-              '<div style="font-size:18px;font-weight:700;color:var(--forest);padding:10px 0 2px;" id="lift-set-total-'+g.id+'">—</div>' +
+              '<div style="font-size:18px;font-weight:700;color:var(--forest);padding:10px 0 2px;" id="lift-set-total-'+g.id+'">1,350</div>' +
               '<div class="lift-unit">lbs</div>' +
             '</div>' +
           '</div>' +
@@ -1500,7 +1634,7 @@ function goalCard(g, fullView) {
             '<option>Squat</option><option>Deadlift</option><option>Bench press</option>' +
           '</select>' +
         '</div>' +
-        '<button class="lift-log-btn" id="lift-btn-'+g.id+'" onclick="logLift('+g.id+')" disabled>Log this set</button>' +
+        '<button class="lift-log-btn" id="lift-btn-'+g.id+'" onclick="logLift('+g.id+')">Log set #1</button>' +
         '<div class="lift-total-bar" style="margin-top:12px;">' +
           '<div class="lift-total-label"><span>Your total</span><span><strong id="lift-my-tons-'+g.id+'">'+liftedTons+' tons</strong> / 16 tons ('+Math.min(100,Math.round((g.liftedLbs/32000)*100))+'%)</span></div>' +
           '<div class="goal-prog-bar" style="height:8px;"><div class="goal-prog-fill" id="lift-my-prog-'+g.id+'" style="width:'+Math.min(100,Math.round((g.liftedLbs/32000)*100))+'%"></div></div>' +
@@ -1508,10 +1642,10 @@ function goalCard(g, fullView) {
         histHtml +
       '</div>' +
       '<div class="tribe-totals-box">' +
-        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span style="font-size:10px;">'+tribePct+'% to goal</span></div>' +
-        '<div class="tribe-totals-big">'+tribeTons+' tons</div>' +
-        '<div class="tribe-totals-sub">of '+targetTons+' tons target · '+tribeTotal.toLocaleString()+' lbs lifted</div>' +
-        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" style="width:'+tribePct+'%"></div></div>' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+tribePct+'% to goal</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeTons+' tons</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">of '+targetTons+' tons target · '+tribeTotal.toLocaleString()+' lbs lifted</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+tribePct+'%"></div></div>' +
         memberRows +
       '</div>';
     return '<div class="goal-pill" id="gpill-'+g.id+'">' +
@@ -1525,7 +1659,10 @@ function goalCard(g, fullView) {
 
   if(g.logType === 'plank') {
     syncMyProgress(g);
-    var tribeTotal = getTribeTotal('c2', 'plankSecs');
+    syncPactTotals();
+    var pactActPlank = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c2') pactActPlank=a; }); });
+    var tribeTotal = pactActPlank ? pactActPlank.tribeTotal : (g.plankSecs || 0);
     var targetSecs = 8 * 3600;
     var totalSecs = g.plankSecs || 0;
     var tribePct = Math.min(100, Math.round((tribeTotal / targetSecs) * 100));
@@ -1545,10 +1682,10 @@ function goalCard(g, fullView) {
     var memberRows = tp ? tp.members.map(function(m){ return tribeMemberRow(m,'plank'); }).join('') : '';
     var plankHtml =
       '<div class="plank-logger">' +
-        '<div class="plank-logger-title">Plank timer</div>' +
-        '<div class="plank-timer-display">' +
-          '<div class="plank-clock idle" id="plank-clock-'+g.id+'">00:00</div>' +
-          '<div class="plank-clock-label" id="plank-clock-lbl-'+g.id+'">Ready to start</div>' +
+        '<div class="plank-logger-title">Log your plank</div>' +
+        '<div class="plank-mode-toggle">' +
+          '<button class="plank-mode-btn active" id="plank-tab-timer-'+g.id+'" onclick="switchPlankMode('+g.id+',\'timer\')">⏱ Timer</button>' +
+          '<button class="plank-mode-btn" id="plank-tab-manual-'+g.id+'" onclick="switchPlankMode('+g.id+',\'manual\')">✏️ Enter minutes</button>' +
         '</div>' +
         '<div class="plank-variation">' +
           '<label class="form-lbl">Variation</label>' +
@@ -1557,17 +1694,29 @@ function goalCard(g, fullView) {
             '<option>Side (right)</option><option>Reverse</option><option>Walking</option>' +
           '</select>' +
         '</div>' +
-        '<div class="plank-btns">' +
-          '<button class="plank-start-btn" id="plank-start-'+g.id+'" onclick="startPlank('+g.id+')">▶ Start plank</button>' +
-          '<button class="plank-end-btn" id="plank-end-'+g.id+'" onclick="endPlank('+g.id+')">■ End &amp; save</button>' +
+        '<div class="plank-timer-section" id="plank-timer-section-'+g.id+'">' +
+          '<div class="plank-timer-display">' +
+            '<div class="plank-clock idle" id="plank-clock-'+g.id+'">00:00</div>' +
+            '<div class="plank-clock-label" id="plank-clock-lbl-'+g.id+'">Ready to start</div>' +
+          '</div>' +
+          '<div class="plank-btns">' +
+            '<button class="plank-start-btn" id="plank-start-'+g.id+'" onclick="startPlank('+g.id+')">▶ Start plank</button>' +
+            '<button class="plank-end-btn" id="plank-end-'+g.id+'" onclick="endPlank('+g.id+')">■ End &amp; save</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="plank-manual-section" id="plank-manual-section-'+g.id+'">' +
+          '<label class="form-lbl">Minutes planked</label>' +
+          '<input class="plank-manual-inp" id="plank-manual-'+g.id+'" type="number" placeholder="0" min="0.1" step="0.1" oninput="calcManualPlank('+g.id+')" />' +
+          '<div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;">e.g. 2.5 = 2 mins 30 secs</div>' +
+          '<button class="plank-manual-log-btn" id="plank-manual-btn-'+g.id+'" onclick="logManualPlank('+g.id+')" disabled>Log this plank</button>' +
         '</div>' +
         histHtml +
       '</div>' +
       '<div class="tribe-totals-box">' +
-        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span style="font-size:10px;">'+tribePct+'% to goal</span></div>' +
-        '<div class="tribe-totals-big">'+tribeHrs+' hrs</div>' +
-        '<div class="tribe-totals-sub">of 8 hrs target · '+(Math.floor(tribeTotal/60))+' minutes planked</div>' +
-        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" style="width:'+tribePct+'%"></div></div>' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+tribePct+'% to goal</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeHrs+' hrs</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">of 8 hrs target · '+(Math.floor(tribeTotal/60))+' minutes planked</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+tribePct+'%"></div></div>' +
         memberRows +
       '</div>';
     return '<div class="goal-pill" id="gpill-'+g.id+'">' +
@@ -1581,13 +1730,17 @@ function goalCard(g, fullView) {
 
   if(g.logType === 'row') {
     syncMyProgress(g);
+    syncPactTotals();
+    var pactActRow = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c3') pactActRow=a; }); });
     var myMeters = g.meters || 0;
+    var tribeMeters = pactActRow ? pactActRow.tribeTotal : myMeters;
     var targetMeters = 34000;
-    var rowPct = Math.min(100, Math.round((myMeters / targetMeters) * 100));
-    var rowKm = (myMeters / 1000).toFixed(2);
+    var rowPct = Math.min(100, Math.round((tribeMeters / targetMeters) * 100));
+    var rowKm = (tribeMeters / 1000).toFixed(2);
     var histHtmlRow = '';
     if(g.logHistory && g.logHistory.length > 0) {
-      histHtmlRow = '<div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;">' +
+      histHtmlRow = '<div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;overflow-x:hidden;width:100%;box-sizing:border-box;">' +
         g.logHistory.slice().reverse().map(function(h){
           return '<div class="row-hist-row">' +
             '<span style="color:var(--text);font-weight:500;">'+h.machine+'</span>' +
@@ -1598,7 +1751,7 @@ function goalCard(g, fullView) {
     }
     var rowHtml =
       '<div class="row-logger">' +
-        '<div class="row-logger-title">Log your metres</div>' +
+        '<div class="row-logger-title">Log your meters</div>' +
         '<div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Machine used</div>' +
         '<div class="row-machine-grid" id="row-machine-grid-'+g.id+'">' +
           '<button class="row-machine-btn selected" onclick="selectRowMachine('+g.id+',this,\'Concept2\')">🚣 Concept2</button>' +
@@ -1608,19 +1761,19 @@ function goalCard(g, fullView) {
         '</div>' +
         '<div class="row-meters-row">' +
           '<div style="flex:1;">' +
-            '<label class="form-lbl">Metres rowed this session</label>' +
+            '<label class="form-lbl">Meters rowed this session</label>' +
             '<input class="row-meters-inp" id="row-meters-'+g.id+'" type="number" placeholder="0" min="1" step="1" oninput="calcRow('+g.id+')" />' +
           '</div>' +
           '<div style="padding-bottom:14px;font-size:13px;color:var(--muted);font-weight:500;">m</div>' +
         '</div>' +
-        '<button class="row-log-btn" id="row-btn-'+g.id+'" onclick="logRow('+g.id+')" disabled>Log these metres</button>' +
+        '<button class="row-log-btn" id="row-btn-'+g.id+'" onclick="logRow('+g.id+')" disabled>Log these meters</button>' +
         histHtmlRow +
       '</div>' +
       '<div class="tribe-totals-box">' +
-        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span style="font-size:10px;">'+rowPct+'% of channel</span></div>' +
-        '<div class="tribe-totals-big">'+myMeters.toLocaleString()+' m</div>' +
-        '<div class="tribe-totals-sub">'+rowKm+' km of 34 km target</div>' +
-        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" style="width:'+rowPct+'%"></div></div>' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+rowPct+'% of channel</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeMeters.toLocaleString()+' m</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">'+rowKm+' km of 34 km target</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+rowPct+'%"></div></div>' +
       '</div>';
     return '<div class="goal-pill" id="gpill-'+g.id+'">' +
       '<div class="goal-pill-top">' +
@@ -1633,14 +1786,17 @@ function goalCard(g, fullView) {
 
   if(g.logType === 'route66') {
     syncMyProgress(g);
-    var tribeTotal66 = getTribeTotal('c4', 'miles');
+    syncPactTotals();
+    var pactActRoute = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c4') pactActRoute=a; }); });
+    var tribeTotal66 = pactActRoute ? pactActRoute.tribeTotal : (g.miles || 0);
     var myMiles = g.miles || 0;
     var targetMiles = 2448;
     var tribePct66 = Math.min(100, Math.round((tribeTotal66 / targetMiles) * 100));
     var tp66 = tribeProgress['c4'];
     var histHtml66 = '';
     if(g.logHistory && g.logHistory.length > 0) {
-      histHtml66 = '<div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;">' +
+      histHtml66 = '<div style="margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;overflow-x:hidden;width:100%;box-sizing:border-box;">' +
         g.logHistory.slice().reverse().map(function(h){
           var icon = modeIcon(h.mode);
           var ebikeTag = h.ebike ? ' <span style="font-size:10px;color:#F4A227;">⚡ e-bike</span>' : '';
@@ -1686,10 +1842,10 @@ function goalCard(g, fullView) {
         histHtml66 +
       '</div>' +
       '<div class="tribe-totals-box">' +
-        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span style="font-size:10px;">'+tribePct66+'% of Route 66</span></div>' +
-        '<div class="tribe-totals-big">'+tribeTotal66.toFixed(1)+' miles</div>' +
-        '<div class="tribe-totals-sub">of 2,448 mile target · '+tribeTotal66.toFixed(1)+' miles covered</div>' +
-        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" style="width:'+tribePct66+'%"></div></div>' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+tribePct66+'% of Route 66</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeTotal66.toFixed(1)+' miles</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">of 2,448 mile target · '+tribeTotal66.toFixed(1)+' miles covered</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+tribePct66+'%"></div></div>' +
         memberRows66 +
       '</div>';
     return '<div class="goal-pill" id="gpill-'+g.id+'">' +
@@ -1699,6 +1855,85 @@ function goalCard(g, fullView) {
       '</div>' +
       routeHtml +
     '</div>';
+  }
+
+  if(g.logType === 'stretch') {
+    var pactActStretch = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='cm1') pactActStretch=a; }); });
+    var stretchDone = g.stretchSessions || 0;
+    var stretchPct  = Math.min(100, Math.round((stretchDone / 2) * 100));
+    var tribeTotalStretch = pactActStretch ? pactActStretch.tribeTotal : stretchDone;
+    var histHtmlStretch = '';
+    if(g.logHistory && g.logHistory.length > 0) {
+      histHtmlStretch = '<div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">' +
+        g.logHistory.slice(-3).reverse().map(function(h){
+          return '<div style="display:flex;justify-content:space-between;font-size:12px;background:white;padding:5px 10px;border-radius:8px;"><span>'+h.label+'</span><span style="color:var(--tribe);font-weight:700;">+1 session</span></div>';
+        }).join('') + '</div>';
+    }
+    var stretchHtml =
+      '<div style="background:var(--bg);border-radius:14px;padding:14px;margin-top:12px;">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;">Log a session</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">' +
+          '<div style="font-size:28px;font-weight:700;color:var(--forest);">'+stretchDone+' / 2</div>' +
+          '<div style="font-size:12px;color:var(--muted);">sessions this week</div>' +
+        '</div>' +
+        '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px;"><div style="height:100%;width:'+stretchPct+'%;background:var(--tribe);border-radius:4px;"></div></div>' +
+        (stretchDone < 2
+          ? '<button style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--tribe);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;" onclick="logStretch('+g.id+')">✓ Log stretch session</button>'
+          : '<div style="text-align:center;padding:10px;background:#E1F5EE;border-radius:12px;font-size:14px;font-weight:700;color:var(--forest);">✅ Goal complete this week!</div>'
+        ) +
+        histHtmlStretch +
+      '</div>' +
+      '<div class="tribe-totals-box">' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+Math.min(100,Math.round((tribeTotalStretch/2)*100))+'% to goal</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeTotalStretch+' sessions</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">of 2 sessions · resets Monday</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+Math.min(100,Math.round((tribeTotalStretch/2)*100))+'%"></div></div>' +
+      '</div>';
+    return '<div class="goal-pill" id="gpill-'+g.id+'">' +
+      '<div class="goal-pill-top"><div class="goal-pill-name">'+displayName+'</div><span class="goal-type-badge '+bc+'" style="'+badgeStyle+'">'+typeLabel+'</span></div>' +
+      stretchHtml + '</div>';
+  }
+
+  if(g.logType === 'airsquats') {
+    var pactActSquat = null;
+    myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='cm2') pactActSquat=a; }); });
+    var squatsDone = g.squats || 0;
+    var squatsPct  = Math.min(100, Math.round((squatsDone / 100) * 100));
+    var tribeTotalSquat = pactActSquat ? pactActSquat.tribeTotal : squatsDone;
+    var histHtmlSquat = '';
+    if(g.logHistory && g.logHistory.length > 0) {
+      histHtmlSquat = '<div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">' +
+        g.logHistory.slice(-3).reverse().map(function(h){
+          return '<div style="display:flex;justify-content:space-between;font-size:12px;background:white;padding:5px 10px;border-radius:8px;overflow:hidden;"><span>'+h.count+' squats</span><span style="color:var(--tribe);font-weight:700;">+'+h.count+'</span></div>';
+        }).join('') + '</div>';
+    }
+    var squatHtml =
+      '<div style="background:var(--bg);border-radius:14px;padding:14px;margin-top:12px;">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;">Log squats</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+          '<div style="font-size:28px;font-weight:700;color:var(--forest);">'+squatsDone+' / 100</div>' +
+          '<div style="font-size:12px;color:var(--muted);">squats this week</div>' +
+        '</div>' +
+        '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px;"><div style="height:100%;width:'+squatsPct+'%;background:var(--tribe);border-radius:4px;"></div></div>' +
+        '<div style="display:flex;gap:8px;margin-bottom:12px;align-items:flex-end;">' +
+          '<div style="flex:1;">' +
+            '<label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Squats this set</label>' +
+            '<input id="squat-inp-'+g.id+'" type="number" min="1" max="200" placeholder="25" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:12px;font-size:22px;font-weight:700;text-align:center;font-family:\'DM Sans\',sans-serif;outline:none;" oninput="calcSquat('+g.id+')" />' +
+          '</div>' +
+          '<button id="squat-btn-'+g.id+'" onclick="logSquats('+g.id+')" disabled style="padding:12px 16px;border:none;border-radius:12px;background:var(--tribe);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;white-space:nowrap;">Log squats</button>' +
+        '</div>' +
+        histHtmlSquat +
+      '</div>' +
+      '<div class="tribe-totals-box">' +
+        '<div class="tribe-totals-title"><span>🏆 Tribe total</span><span id="tt-pct-'+g.id+'" style="font-size:10px;">'+Math.min(100,Math.round((tribeTotalSquat/100)*100))+'% to goal</span></div>' +
+        '<div class="tribe-totals-big" id="tt-big-'+g.id+'">'+tribeTotalSquat+' squats</div>' +
+        '<div class="tribe-totals-sub" id="tt-sub-'+g.id+'">of 100 squats · resets Monday</div>' +
+        '<div class="tribe-totals-bar"><div class="tribe-totals-fill" id="tt-bar-'+g.id+'" style="width:'+Math.min(100,Math.round((tribeTotalSquat/100)*100))+'%"></div></div>' +
+      '</div>';
+    return '<div class="goal-pill" id="gpill-'+g.id+'">' +
+      '<div class="goal-pill-top"><div class="goal-pill-name">'+displayName+'</div><span class="goal-type-badge '+bc+'" style="'+badgeStyle+'">'+typeLabel+'</span></div>' +
+      squatHtml + '</div>';
   }
 
   return '<div class="goal-pill'+(g.checked?' checked':'')+'" id="gpill-'+g.id+'">' +
@@ -1713,27 +1948,25 @@ function goalCard(g, fullView) {
 }
 
 function calcLift(id) {
-  var w = parseFloat(document.getElementById('lift-weight-'+id).value) || 0;
-  var r = parseFloat(document.getElementById('lift-reps-'+id).value) || 0;
+  var w = parseFloat(document.getElementById('lift-weight-'+id).value) || 135;
+  var r = parseFloat(document.getElementById('lift-reps-'+id).value) || 10;
   var setTotal = w * r;
   var totalEl = document.getElementById('lift-set-total-'+id);
   var btn = document.getElementById('lift-btn-'+id);
   if(totalEl) totalEl.textContent = setTotal > 0 ? setTotal.toLocaleString() : '—';
-  if(btn) btn.disabled = (setTotal <= 0);
+  if(btn) btn.disabled = false;
 
   var g = goals.find(function(x){ return x.id===id; });
   if(!g) return;
   var projected = (g.liftedLbs || 0) + setTotal;
   var projTons = (projected / 2000).toFixed(2);
   var projPct = Math.min(100, Math.round((projected / 32000) * 100));
-  var tonsEl = document.getElementById('lift-my-tons-'+id);
   var progEl = document.getElementById('lift-my-prog-'+id);
-  if(tonsEl) tonsEl.textContent = projTons + ' tons';
   if(progEl) progEl.style.width = projPct + '%';
-  var lbl = tonsEl ? tonsEl.closest('.lift-total-label') : null;
-  if(lbl) {
-    var span = lbl.querySelector('span:last-child');
-    if(span) span.innerHTML = '<strong id="lift-my-tons-'+id+'">'+projTons+' tons</strong> / 16 tons ('+projPct+'%)';
+  var tonsEl = document.getElementById('lift-my-tons-'+id);
+  if(tonsEl) {
+    var sp = tonsEl.parentElement;
+    if(sp) sp.innerHTML = '<strong id="lift-my-tons-'+id+'">'+projTons+' tons</strong> / 16 tons ('+projPct+'%)';
   }
 }
 
@@ -1743,22 +1976,13 @@ function syncPactTotals() {
       var total = 0;
       goals.forEach(function(g) {
         if(g.challengeId !== a.challengeId) return;
-        if(a.logType === 'lift')    total += (g.liftedLbs || 0);
-        if(a.logType === 'plank')   total += (g.plankSecs || 0);
-        if(a.logType === 'row')     total += (g.meters || 0);
-        if(a.logType === 'route66') total += (g.miles || 0);
+        if(a.logType === 'lift')       total += (g.liftedLbs || 0);
+        if(a.logType === 'plank')      total += (g.plankSecs || 0);
+        if(a.logType === 'row')        total += (g.meters || 0);
+        if(a.logType === 'route66')    total += (g.miles || 0);
+        if(a.logType === 'stretch')    total += (g.stretchSessions || 0);
+        if(a.logType === 'airsquats')  total += (g.squats || 0);
       });
-      var tp = tribeProgress[a.challengeId];
-      if(tp) {
-        var me = tp.members.find(function(m){ return m.isMe; });
-        if(me) {
-          if(a.logType === 'lift')    total += tp.members.filter(function(m){ return !m.isMe; }).reduce(function(s,m){ return s+(m.liftedLbs||0); },0);
-          if(a.logType === 'plank')   total += tp.members.filter(function(m){ return !m.isMe; }).reduce(function(s,m){ return s+(m.plankSecs||0); },0);
-          if(a.logType === 'route66') total += tp.members.filter(function(m){ return !m.isMe; }).reduce(function(s,m){ return s+(m.miles||0); },0);
-        } else {
-          total = tp.members.reduce(function(s,m){ return s+(m.liftedLbs||m.plankSecs||m.miles||0); },0);
-        }
-      }
       a.tribeTotal = total;
     });
   });
@@ -1772,26 +1996,72 @@ function logLift(id) {
   var ex = document.getElementById('lift-exercise-'+id).value;
   if(w <= 0 || r <= 0) return;
   var setLbs = w * r;
-  g.liftedLbs += setLbs;
+  g.liftedLbs = (g.liftedLbs || 0) + setLbs;
   g.pct = Math.min(100, Math.round((g.liftedLbs / g.targetLbs) * 100));
   if(!g.logHistory) g.logHistory = [];
   g.logHistory.push({ weight:w, reps:r, exercise:ex, totalLbs:setLbs, time:'Just now' });
   syncMyProgress(g);
   syncPactTotals();
   addActivityEntry('c1', ex+' · '+w+'lbs × '+r+' reps', '+'+setLbs.toLocaleString()+' lbs');
-  var actId = null;
-  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c1') actId=a.id; }); });
-  if(actId){
-    if(!activityFeed[actId]) activityFeed[actId]=[];
-    activityFeed[actId].unshift({ av:'JD', cls:'av-a', name:'You', detail:ex+' · '+w+'lbs × '+r+' reps', val:'+'+setLbs.toLocaleString()+' lbs', time:'Just now', isMe:true });
-  }
-  var myTons = (g.liftedLbs / 2000).toFixed(2);
+
+  var myTons  = (g.liftedLbs / 2000).toFixed(2);
+  var myPct   = Math.min(100, Math.round((g.liftedLbs / 32000) * 100));
   var pactAct = null;
   myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c1') pactAct=a; }); });
-  var tribeTons = pactAct ? (pactAct.tribeTotal / 2000).toFixed(2) : myTons;
-  renderHomeGoals();
-  renderGoalsFull();
-  showToast('💪 +'+setLbs.toLocaleString()+' lbs! Your '+myTons+' tons. Tribe: '+tribeTons+' tons total.');
+  var tribeTotal = pactAct ? pactAct.tribeTotal : g.liftedLbs;
+  var tribeTons  = (tribeTotal / 2000).toFixed(2);
+  var tribePct   = Math.min(100, Math.round((tribeTotal / 32000) * 100));
+
+  var card = document.getElementById('gpill-'+id);
+  if(card) {
+    /* update Your total bar */
+    var progEl = document.getElementById('lift-my-prog-'+id);
+    if(progEl) progEl.style.width = myPct + '%';
+    var tonsEl = document.getElementById('lift-my-tons-'+id);
+    if(tonsEl) {
+      var sp = tonsEl.parentElement;
+      if(sp) sp.innerHTML = '<strong id="lift-my-tons-'+id+'">'+myTons+' tons</strong> / 16 tons ('+myPct+'%)';
+    }
+    /* update Tribe total box */
+    updateTribeTotalsBox(id, tribeTons+' tons', 'of 16 tons target · '+tribeTotal.toLocaleString()+' lbs lifted', tribePct+'% to goal', tribePct);
+
+    /* update set counter on button */
+    var setCount = g.logHistory.length;
+    var btn = document.getElementById('lift-btn-'+id);
+    if(btn) btn.textContent = 'Log set #'+(setCount+1);
+
+    /* update set total display back to current selection */
+    document.getElementById('lift-set-total-'+id).textContent = (w*r).toLocaleString();
+
+    /* show done button after first set */
+    var doneBtn = document.getElementById('lift-done-'+id);
+    if(!doneBtn) {
+      doneBtn = document.createElement('button');
+      doneBtn.id = 'lift-done-'+id;
+      doneBtn.style.cssText = 'width:100%;margin-top:8px;padding:11px;border:1.5px solid var(--tribe);border-radius:12px;background:transparent;color:var(--tribe);font-size:13px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;';
+      doneBtn.textContent = '✓ Done — finish session';
+      doneBtn.onclick = function(){ showToast('💪 Session complete! '+setCount+' set'+(setCount!==1?'s':'')+' · '+myTons+' tons total.'); };
+      var logger = card.querySelector('.lift-logger');
+      if(logger && btn) btn.parentNode.insertBefore(doneBtn, btn.nextSibling);
+    }
+    doneBtn.textContent = '✓ Done — finish session ('+setCount+' set'+(setCount!==1?'s':'')+', '+myTons+' tons)';
+
+    /* prepend history row */
+    var hist = card.querySelector('.lift-history');
+    if(!hist) {
+      hist = document.createElement('div');
+      hist.className = 'lift-history';
+      var logger = card.querySelector('.lift-logger');
+      if(logger) logger.appendChild(hist);
+    }
+    var row = document.createElement('div');
+    row.className = 'lift-hist-row';
+    row.innerHTML = '<span class="lift-hist-left">Set '+setCount+' · '+w+'lbs × '+r+' — '+ex+'</span><span class="lift-hist-right">+'+setLbs.toLocaleString()+' lbs</span>';
+    hist.insertBefore(row, hist.firstChild);
+  }
+
+  renderPactCards();
+  showToast('💪 Set '+g.logHistory.length+' logged · +'+setLbs.toLocaleString()+' lbs! Running total: '+myTons+' tons.');
 }
 
 function checkIn(id) {
@@ -1810,11 +2080,27 @@ function addActivityEntry(challengeId, detail, val) {
   if(!activityFeed[challengeId]) activityFeed[challengeId] = [];
   var initials = currentUser ? currentUser.initials : 'JD';
   var name = currentUser ? currentUser.name.split(' ')[0]+' '+currentUser.name.split(' ')[1][0]+'.' : 'You';
-  activityFeed[challengeId].unshift({
+  var entry = {
     av: initials, cls: 'av-a', name: name,
     detail: detail, val: val,
     time: 'Just now', isMe: true
+  };
+  activityFeed[challengeId].unshift(entry);
+
+  var challenge = tribeChallenges.find(function(c){ return c.id === challengeId; });
+  var tribeName = '';
+  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId===challengeId) tribeName=p.name; }); });
+  feedItems.unshift({
+    id: Date.now(),
+    av: initials, avc: 'av-a',
+    name: name,
+    time: 'Just now',
+    tribe: tribeName || 'My tribe',
+    msg: detail + ' — ' + val,
+    likes: 0, liked: false, comments: 0
   });
+  var feedEl = document.getElementById('feed-full');
+  if(feedEl) renderFeedItems(feedItems, 'feed-full');
 }
 
 /* ── ROW LOGGER ── */
@@ -1846,20 +2132,33 @@ function logRow(id) {
   syncMyProgress(g);
   syncPactTotals();
   addActivityEntry('c3', machine+' · '+m.toLocaleString()+' m', '+'+m.toLocaleString()+' m');
-  var actId = null;
-  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c3') actId=a.id; }); });
-  if(actId){
-    if(!activityFeed[actId]) activityFeed[actId]=[];
-    activityFeed[actId].unshift({ av:'JD', cls:'av-a', name:'You', detail:machine+' · '+m.toLocaleString()+' m', val:'+'+m.toLocaleString()+' m', time:'Just now', isMe:true });
-  }
+
   var pactAct = null;
   myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c3') pactAct=a; }); });
-  var tribeM = pactAct ? pactAct.tribeTotal : g.meters;
+  var tribeM  = pactAct ? pactAct.tribeTotal : g.meters;
   var tribeKm = (tribeM / 1000).toFixed(2);
-  document.getElementById('row-meters-'+id).value = '';
-  if(document.getElementById('row-btn-'+id)) document.getElementById('row-btn-'+id).disabled = true;
-  renderHomeGoals();
-  renderGoalsFull();
+  var tribePct = Math.min(100, Math.round((tribeM / 34000) * 100));
+  var myKm    = (g.meters / 1000).toFixed(2);
+
+  var card = document.getElementById('gpill-'+id);
+  if(card) {
+    updateTribeTotalsBox(id, g.meters.toLocaleString()+' m', myKm+' km of 34 km target', Math.min(100,Math.round((g.meters/34000)*100))+'% of channel', Math.min(100,Math.round((g.meters/34000)*100)));
+    document.getElementById('row-meters-'+id).value = '';
+    document.getElementById('row-btn-'+id).disabled = true;
+    var hist = card.querySelector('.row-history');
+    if(!hist) {
+      hist = document.createElement('div');
+      hist.style.cssText = 'margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;overflow-x:hidden;width:100%;box-sizing:border-box;';
+      var logger = card.querySelector('.row-logger');
+      if(logger) logger.appendChild(hist);
+    }
+    var row = document.createElement('div');
+    row.className = 'row-hist-row';
+    row.innerHTML = '<span style="color:var(--text);font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">'+machine+'</span><span style="color:var(--tribe);font-weight:700;flex-shrink:0;">+'+m.toLocaleString()+' m</span>';
+    hist.insertBefore(row, hist.firstChild);
+  }
+
+  renderPactCards();
   showToast('🚣 +'+m.toLocaleString()+' m logged! Your total: '+g.meters.toLocaleString()+' m. Tribe: '+tribeKm+' km / 34 km.');
 }
 
@@ -1923,23 +2222,37 @@ function logRoute(id) {
   g.logHistory.push({ mode: mode, raw: raw, logged: logged, ebike: isEbike });
   syncMyProgress(g);
   syncPactTotals();
-  var modeLabel = mode.replace(/^[^ ]+ /,'');
   addActivityEntry('c4', mode+(isEbike?' ⚡':'')+' · '+logged.toFixed(1)+' mi', '+'+logged.toFixed(1)+' mi');
-  var actId = null;
-  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c4') actId=a.id; }); });
-  if(actId){
-    if(!activityFeed[actId]) activityFeed[actId]=[];
-    var detail = mode+(isEbike?' ⚡':'')+' · '+logged.toFixed(1)+' mi'+(isEbike?' ('+raw+' raw)':'');
-    activityFeed[actId].unshift({ av:'JD', cls:'av-a', name:'You', detail:detail, val:'+'+logged.toFixed(1)+' mi', time:'Just now', isMe:true });
-  }
+
   var pactAct = null;
   myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c4') pactAct=a; }); });
-  var tribeMiles = pactAct ? pactAct.tribeTotal.toFixed(1) : g.miles.toFixed(1);
-  var myMiles = g.miles.toFixed(1);
-  var ebikeNote = isEbike ? ' (e-bike adjusted from '+raw+' mi)' : '';
-  renderHomeGoals();
-  renderGoalsFull();
-  showToast('🛣️ +'+logged.toFixed(1)+' mi logged'+ebikeNote+'! Your total: '+myMiles+' mi. Tribe: '+tribeMiles+' mi.');
+  var tribeMiles = pactAct ? pactAct.tribeTotal : g.miles;
+  var tribePct   = Math.min(100, Math.round((tribeMiles / 2448) * 100));
+  var ebikeNote  = isEbike ? ' (e-bike adjusted from '+raw+' mi)' : '';
+  var icon       = modeIcon(mode);
+
+  var card = document.getElementById('gpill-'+id);
+  if(card) {
+    updateTribeTotalsBox(id, tribeMiles.toFixed(1)+' miles', 'of 2,448 mile target', tribePct+'% of Route 66', tribePct);
+    document.getElementById('route-miles-'+id).value = '';
+    document.getElementById('route-btn-'+id).disabled = true;
+    var adjEl = document.getElementById('route-adj-'+id);
+    if(adjEl) adjEl.classList.remove('show');
+    var hist = card.querySelector('.route-history');
+    if(!hist) {
+      hist = document.createElement('div');
+      hist.style.cssText = 'margin-top:10px;display:flex;flex-direction:column;gap:5px;max-height:90px;overflow-y:auto;overflow-x:hidden;width:100%;box-sizing:border-box;';
+      var logger = card.querySelector('.route-logger');
+      if(logger) logger.appendChild(hist);
+    }
+    var row = document.createElement('div');
+    row.className = 'route-hist-row';
+    row.innerHTML = '<span class="route-hist-left">'+icon+' '+mode.replace(/^[^ ]+ /,'')+(isEbike?' ⚡ e-bike':'')+'</span><span class="route-hist-right">+'+logged.toFixed(1)+' mi'+(raw!==logged?' <span style="font-size:10px;opacity:0.7;">('+raw+' raw)</span>':'')+'</span>';
+    hist.insertBefore(row, hist.firstChild);
+  }
+
+  renderPactCards();
+  showToast('🛣️ +'+logged.toFixed(1)+' mi logged'+ebikeNote+'! Your total: '+g.miles.toFixed(1)+' mi. Tribe: '+tribeMiles.toFixed(1)+' mi.');
 }
 
 /* ── MY TRIBEPACTS — HOME ── */
@@ -1954,10 +2267,14 @@ function pactPct(act) {
 }
 
 function pactTotalLabel(act) {
-  if(act.logType === 'lift') return (act.tribeTotal / 2000).toFixed(1) + ' tons';
-  if(act.logType === 'plank') return (act.tribeTotal / 3600).toFixed(1) + ' hrs';
-  if(act.logType === 'row') return act.tribeTotal.toLocaleString() + ' m';
-  if(act.logType === 'route66') return act.tribeTotal.toFixed(1) + ' mi';
+  if(act.logType === 'lift')       return (act.tribeTotal / 2000).toFixed(1) + ' tons';
+  if(act.logType === 'plank')      return (act.tribeTotal / 3600).toFixed(1) + ' hrs';
+  if(act.logType === 'row')        return act.tribeTotal.toLocaleString() + ' m';
+  if(act.logType === 'route66')    return act.tribeTotal.toFixed ? act.tribeTotal.toFixed(1) + ' mi' : act.tribeTotal + ' mi';
+  if(act.logType === 'steps')      return act.tribeTotal.toLocaleString() + ' steps';
+  if(act.logType === 'plank-race') return (act.tribeTotal / 60).toFixed(1) + ' min';
+  if(act.logType === 'stretch')    return act.tribeTotal + ' / 2 sessions';
+  if(act.logType === 'airsquats')  return act.tribeTotal + ' squats';
   return act.tribeTotal;
 }
 
@@ -1984,12 +2301,17 @@ function renderPactCards() {
     var leaderBadge = p.isLeader ? '<div class="pact-card-leader">👑 Leader</div>' : '';
     var actRows = p.activities.map(function(a) {
       var pct = pactPct(a);
+      var catBadge = '';
+      if(a.subType==='epic')    catBadge = '<span style="font-size:9px;background:#FDE8E8;color:#9B1F1F;padding:1px 6px;border-radius:6px;font-weight:700;margin-left:4px;">EPIC</span>';
+      if(a.subType==='weekly')  catBadge = '<span style="font-size:9px;background:#E1F5EE;color:#085041;padding:1px 6px;border-radius:6px;font-weight:700;margin-left:4px;">WEEKLY</span>';
+      if(a.subType==='race')    catBadge = '<span style="font-size:9px;background:#FFF4E6;color:#8B5400;padding:1px 6px;border-radius:6px;font-weight:700;margin-left:4px;">RACE</span>';
+      if(a.subType==='common')  catBadge = '<span style="font-size:9px;background:#EBF4FF;color:#1A5FA8;padding:1px 6px;border-radius:6px;font-weight:700;margin-left:4px;">COMMON</span>';
       return '<div class="pact-activity-row">' +
         '<div class="pact-act-icon">'+a.icon+'</div>' +
         '<div class="pact-act-info">' +
-          '<div class="pact-act-name">'+a.name+'</div>' +
+          '<div class="pact-act-name">'+a.name+catBadge+'</div>' +
           '<div class="pact-act-bar"><div class="pact-act-fill" style="width:'+pct+'%"></div></div>' +
-          '<div class="pact-act-progress">Tribe: '+pactTotalLabel(a)+' of '+a.targetLabel+'</div>' +
+          '<div class="pact-act-progress">'+pactTotalLabel(a)+' of '+a.targetLabel+'</div>' +
         '</div>' +
         '<div class="pact-act-pct">'+pct+'%</div>' +
       '</div>';
@@ -2015,7 +2337,7 @@ function openPactDetail(pactId) {
   var p = currentPact;
   var actCards = p.activities.map(function(a) {
     var pct = pactPct(a);
-    var feed = activityFeed[a.id] || [];
+    var feed = activityFeed[a.challengeId] || [];
     var recentAv = feed.slice(0,3).map(function(f,i){
       var colors = ['#E1F5EE','#EBF4FF','#FFF4E6'];
       var texts  = ['#085041','#1A5FA8','#8B5400'];
@@ -2055,6 +2377,13 @@ function openPactDetail(pactId) {
     '<div style="padding:16px 0 0;">'+
       '<div style="padding:0 20px 14px;font-size:13px;color:var(--muted);">Tap a challenge to see who\'s been logging and update your progress.</div>'+
       actCards +
+      (p.isLeader
+        ? '<div style="margin:8px 20px 16px;">' +
+            '<button onclick="openAddTribeGoal(\''+p.id+'\')" style="width:100%;padding:14px;border:2px dashed var(--tribe);border-radius:18px;background:transparent;font-size:15px;color:var(--tribe);font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">' +
+              '<span style="font-size:20px;">＋</span> Add a goal to this tribe' +
+            '</button>' +
+          '</div>'
+        : '') +
     '</div>';
   showScreen('pact-detail');
 }
@@ -2064,7 +2393,7 @@ function openActivityDetail(actId) {
   myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.id===actId) act=a; }); });
   if(!act) return;
   currentActivity = act;
-  var feed = activityFeed[actId] || [];
+  var feed = activityFeed[act.challengeId] || [];
   var pct = pactPct(act);
 
   var entryRows = feed.length === 0
@@ -2138,6 +2467,7 @@ function acceptChallengeFromDetail(challengeId) {
     challengeId: c.id, logType: c.logType || 'standard',
     liftedLbs: 0, targetLbs: 32000,
     plankSecs: 0, miles: 0, meters: 0, lastMode: null,
+    stretchSessions: 0, squats: 0,
     logHistory: []
   });
   showToast(c.emoji+' Challenge accepted! Now log your first entry.');
@@ -2162,6 +2492,179 @@ function goUpdateActivity(challengeId) {
 
 function renderHomeGoals() {
   renderPactCards();
+}
+
+function updateTribeTotalsBox(gid, bigText, subText, pctText, pctWidth) {
+  var big  = document.getElementById('tt-big-'+gid);
+  var sub  = document.getElementById('tt-sub-'+gid);
+  var pct  = document.getElementById('tt-pct-'+gid);
+  var bar  = document.getElementById('tt-bar-'+gid);
+  if(big)  big.textContent  = bigText;
+  if(sub)  sub.textContent  = subText;
+  if(pct)  pct.textContent  = pctText;
+  if(bar)  bar.style.width  = pctWidth + '%';
+}
+
+/* ── DRUM PICKERS (Weight & Reps) ── */
+var drumValues = {}; // drumValues[gid] = { weight: 135, reps: 10 }
+
+function initDrum(type, gid) {
+  var el = document.getElementById('drum-'+type+'-'+gid);
+  if(!el || el.dataset.init) return;
+  el.dataset.init = '1';
+  // Scroll to default selected item
+  var sel = el.querySelector('.drum-item.selected');
+  if(sel) {
+    setTimeout(function(){
+      el.scrollTop = sel.offsetTop - el.offsetHeight/2 + sel.offsetHeight/2;
+    }, 50);
+  }
+  if(!drumValues[gid]) drumValues[gid] = { weight:135, reps:10 };
+}
+
+function onDrumScroll(type, gid) {
+  var el = document.getElementById('drum-'+type+'-'+gid);
+  if(!el) return;
+  var center = el.scrollTop + el.offsetHeight / 2;
+  var items = el.querySelectorAll('.drum-item');
+  var closest = null, closestDist = Infinity;
+  items.forEach(function(item) {
+    var itemCenter = item.offsetTop + item.offsetHeight / 2;
+    var dist = Math.abs(center - itemCenter);
+    if(dist < closestDist) { closestDist = dist; closest = item; }
+  });
+  if(closest) {
+    items.forEach(function(i){ i.classList.remove('selected'); });
+    closest.classList.add('selected');
+    var val = parseInt(closest.dataset.val);
+    if(!drumValues[gid]) drumValues[gid] = { weight:135, reps:10 };
+    drumValues[gid][type] = val;
+    document.getElementById('lift-'+type+'-'+gid).value = val;
+    calcLift(gid);
+  }
+}
+
+function initAllDrums() {
+  goals.forEach(function(g) {
+    if(g.logType === 'lift') {
+      initDrum('weight', g.id);
+      initDrum('reps', g.id);
+    }
+  });
+}
+
+/* ── STRETCH & AIR SQUATS ── */
+function logStretch(id) {
+  var g = goals.find(function(x){ return x.id===id; });
+  if(!g || (g.stretchSessions||0) >= 2) return;
+  g.stretchSessions = (g.stretchSessions || 0) + 1;
+  g.pct = Math.min(100, Math.round((g.stretchSessions / 2) * 100));
+  if(!g.logHistory) g.logHistory = [];
+  var labels = ['Morning stretch','Evening stretch','Post-workout stretch','Full body stretch'];
+  g.logHistory.push({ label: labels[Math.floor(Math.random()*labels.length)] });
+  syncPactTotals();
+  addActivityEntry('cm1', 'Stretch session logged', '+1 session');
+  updateTribeTotalsBox(id, g.stretchSessions+' sessions', 'of 2 sessions · resets Monday', Math.min(100,Math.round((g.stretchSessions/2)*100))+'% to goal', Math.min(100,Math.round((g.stretchSessions/2)*100)));
+  renderGoalsFull();
+  renderPactCards();
+  showToast('🧘 Stretch logged! '+g.stretchSessions+' of 2 sessions this week.');
+}
+
+function calcSquat(id) {
+  var v = parseFloat(document.getElementById('squat-inp-'+id).value) || 0;
+  var btn = document.getElementById('squat-btn-'+id);
+  if(btn) btn.disabled = (v <= 0);
+}
+
+function logSquats(id) {
+  var g = goals.find(function(x){ return x.id===id; });
+  if(!g) return;
+  var count = parseFloat(document.getElementById('squat-inp-'+id).value) || 0;
+  if(count <= 0) return;
+  g.squats = (g.squats || 0) + count;
+  g.pct = Math.min(100, Math.round((g.squats / 100) * 100));
+  if(!g.logHistory) g.logHistory = [];
+  g.logHistory.push({ count: count });
+  syncPactTotals();
+  addActivityEntry('cm2', count+' air squats', '+'+count+' squats');
+  updateTribeTotalsBox(id, g.squats+' squats', 'of 100 squats · resets Monday', Math.min(100,Math.round((g.squats/100)*100))+'% to goal', Math.min(100,Math.round((g.squats/100)*100)));
+  document.getElementById('squat-inp-'+id).value = '';
+  document.getElementById('squat-btn-'+id).disabled = true;
+  renderGoalsFull();
+  renderPactCards();
+  showToast('🏃 '+count+' air squats logged! Total this week: '+g.squats+'/100.');
+}
+
+/* ── PLANK MODE TOGGLE ── */
+function switchPlankMode(id, mode) {
+  var timerTab   = document.getElementById('plank-tab-timer-'+id);
+  var manualTab  = document.getElementById('plank-tab-manual-'+id);
+  var timerSec   = document.getElementById('plank-timer-section-'+id);
+  var manualSec  = document.getElementById('plank-manual-section-'+id);
+  if(mode === 'timer') {
+    timerTab.classList.add('active');
+    manualTab.classList.remove('active');
+    timerSec.classList.remove('hide');
+    manualSec.classList.remove('show');
+  } else {
+    manualTab.classList.add('active');
+    timerTab.classList.remove('active');
+    timerSec.classList.add('hide');
+    manualSec.classList.add('show');
+  }
+}
+
+function calcManualPlank(id) {
+  var val = parseFloat(document.getElementById('plank-manual-'+id).value) || 0;
+  var btn = document.getElementById('plank-manual-btn-'+id);
+  if(btn) btn.disabled = (val <= 0);
+}
+
+function logManualPlank(id) {
+  var g = goals.find(function(x){ return x.id===id; });
+  if(!g) return;
+  var mins = parseFloat(document.getElementById('plank-manual-'+id).value) || 0;
+  if(mins <= 0) return;
+  var elapsed = Math.round(mins * 60);
+  var variation = document.getElementById('plank-var-'+id) ? document.getElementById('plank-var-'+id).value : 'Standard';
+  g.plankSecs = (g.plankSecs || 0) + elapsed;
+  g.pct = Math.min(100, Math.round((g.plankSecs / (8 * 3600)) * 100));
+  if(!g.logHistory) g.logHistory = [];
+  var dispMins = Math.floor(elapsed / 60);
+  var dispSecs = elapsed % 60;
+  var display = dispMins > 0 ? dispMins+'m '+dispSecs+'s' : dispSecs+'s';
+  g.logHistory.push({ variation: variation, secs: elapsed, display: display });
+  syncMyProgress(g);
+  syncPactTotals();
+  addActivityEntry('c2', variation+' plank · '+display, '+'+display);
+
+  var pactAct = null;
+  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c2') pactAct=a; }); });
+  var tribeTotal = pactAct ? pactAct.tribeTotal : g.plankSecs;
+  var tribeHrs   = (tribeTotal / 3600).toFixed(2);
+  var tribePct   = Math.min(100, Math.round((tribeTotal / 28800) * 100));
+  var myHrs      = (g.plankSecs / 3600).toFixed(2);
+
+  var card = document.getElementById('gpill-'+id);
+  if(card) {
+    updateTribeTotalsBox(id, tribeHrs+' hrs', 'of 8 hrs target · '+Math.floor(tribeTotal/60)+' minutes planked', tribePct+'% to goal', tribePct);
+    document.getElementById('plank-manual-'+id).value = '';
+    document.getElementById('plank-manual-btn-'+id).disabled = true;
+    var hist = card.querySelector('.plank-history');
+    if(!hist) {
+      hist = document.createElement('div');
+      hist.className = 'plank-history';
+      var logger = card.querySelector('.plank-logger');
+      if(logger) logger.appendChild(hist);
+    }
+    var row = document.createElement('div');
+    row.className = 'plank-hist-row';
+    row.innerHTML = '<span class="plank-hist-left">'+variation+' plank ✏️</span><span class="plank-hist-right">+'+display+'</span>';
+    hist.insertBefore(row, hist.firstChild);
+  }
+
+  renderPactCards();
+  showToast('🧱 '+display+' logged! Your total: '+myHrs+' hrs. Tribe: '+tribeHrs+' hrs total.');
 }
 
 /* ── PLANK TIMER ── */
@@ -2206,9 +2709,9 @@ function endPlank(id) {
   if(elapsed < 5) {
     showToast('Hold longer than 5 seconds to log a set!');
     var startBtn = document.getElementById('plank-start-'+id);
-    var endBtn = document.getElementById('plank-end-'+id);
-    var clock = document.getElementById('plank-clock-'+id);
-    var lbl = document.getElementById('plank-clock-lbl-'+id);
+    var endBtn   = document.getElementById('plank-end-'+id);
+    var clock    = document.getElementById('plank-clock-'+id);
+    var lbl      = document.getElementById('plank-clock-lbl-'+id);
     if(startBtn){ startBtn.style.display='block'; endBtn.style.display='none'; clock.className='plank-clock idle'; clock.textContent='00:00'; lbl.textContent='Ready to start'; }
     return;
   }
@@ -2226,18 +2729,38 @@ function endPlank(id) {
   syncMyProgress(g);
   syncPactTotals();
   addActivityEntry('c2', variation+' plank · '+display, '+'+display);
-  var actId = null;
-  myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c2') actId=a.id; }); });
-  if(actId){
-    if(!activityFeed[actId]) activityFeed[actId]=[];
-    activityFeed[actId].unshift({ av:'JD', cls:'av-a', name:'You', detail:variation+' plank · '+display, val:'+'+display, time:'Just now', isMe:true });
-  }
+
   var pactAct = null;
   myPacts.forEach(function(p){ p.activities.forEach(function(a){ if(a.challengeId==='c2') pactAct=a; }); });
-  var tribeHrs = pactAct ? (pactAct.tribeTotal / 3600).toFixed(2) : (g.plankSecs/3600).toFixed(2);
-  var myHrs = (g.plankSecs / 3600).toFixed(2);
-  renderHomeGoals();
-  renderGoalsFull();
+  var tribeTotal = pactAct ? pactAct.tribeTotal : g.plankSecs;
+  var tribeHrs   = (tribeTotal / 3600).toFixed(2);
+  var tribePct   = Math.min(100, Math.round((tribeTotal / 28800) * 100));
+  var myHrs      = (g.plankSecs / 3600).toFixed(2);
+
+  var card = document.getElementById('gpill-'+id);
+  if(card) {
+    updateTribeTotalsBox(id, tribeHrs+' hrs', 'of 8 hrs target · '+Math.floor(tribeTotal/60)+' minutes planked', tribePct+'% to goal', tribePct);
+    var startBtn = document.getElementById('plank-start-'+id);
+    var endBtn   = document.getElementById('plank-end-'+id);
+    var clock    = document.getElementById('plank-clock-'+id);
+    var lbl2     = document.getElementById('plank-clock-lbl-'+id);
+    if(startBtn){ startBtn.style.display='block'; endBtn.style.display='none'; }
+    if(clock)   { clock.className='plank-clock idle'; clock.textContent='00:00'; }
+    if(lbl2)    { lbl2.textContent='Ready to start'; }
+    var hist = card.querySelector('.plank-history');
+    if(!hist) {
+      hist = document.createElement('div');
+      hist.className = 'plank-history';
+      var logger = card.querySelector('.plank-logger');
+      if(logger) logger.appendChild(hist);
+    }
+    var row = document.createElement('div');
+    row.className = 'plank-hist-row';
+    row.innerHTML = '<span class="plank-hist-left">'+variation+' plank</span><span class="plank-hist-right">+'+display+'</span>';
+    hist.insertBefore(row, hist.firstChild);
+  }
+
+  renderPactCards();
   showToast('🧱 '+display+' logged! Your total: '+myHrs+' hrs. Tribe: '+tribeHrs+' hrs total.');
 }
 
@@ -2245,22 +2768,31 @@ function renderGoalsFull() {
   var el = document.getElementById('goals-full');
   if(!el) return;
   el.innerHTML = goals.map(function(g){ return goalCard(g, true); }).join('');
+  setTimeout(initAllDrums, 60);
 }
 
 function renderFeedItems(items, elId) {
   var el = document.getElementById(elId);
   if(!el) return;
+  if(!items || items.length === 0) {
+    el.innerHTML = '<div style="padding:32px 20px;text-align:center;">' +
+      '<div style="font-size:40px;margin-bottom:12px;">📣</div>' +
+      '<div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">No activity yet</div>' +
+      '<div style="font-size:13px;color:var(--muted);">Log a challenge and it will appear here.</div>' +
+    '</div>';
+    return;
+  }
   el.innerHTML = items.map(function(f){
     return '<div class="feed-card">' +
       '<div class="feed-top">' +
-        '<div class="feed-av '+f.avc+'">'+f.av+'</div>' +
+        '<div class="feed-av '+(f.avc||'av-a')+'">'+f.av+'</div>' +
         '<div class="feed-meta"><div class="feed-name">'+f.name+'</div><div class="feed-time">'+f.time+'</div></div>' +
-        '<div class="feed-tribe-tag">'+f.tribe+'</div>' +
+        '<div class="feed-tribe-tag">'+(f.tribe||'My tribe')+'</div>' +
       '</div>' +
       '<div class="feed-msg">'+f.msg+'</div>' +
       '<div class="feed-actions">' +
-        '<span class="feed-action'+(f.liked?' liked':'')+'" onclick="toggleLike('+f.id+',\''+elId+'\')">'+( f.liked?'♥':'♡')+' '+f.likes+'</span>' +
-        '<span class="feed-action">💬 '+f.comments+'</span>' +
+        '<span class="feed-action'+(f.liked?' liked':'')+'" onclick="toggleLike('+f.id+')">'+( f.liked?'♥':'♡')+' '+(f.likes||0)+'</span>' +
+        '<span class="feed-action">💬 '+(f.comments||0)+'</span>' +
         '<span class="feed-action">↗ Share</span>' +
       '</div>' +
     '</div>';
@@ -2292,7 +2824,7 @@ function renderTribes(list) {
   }).join('');
 }
 
-function toggleLike(id, elId) {
+function toggleLike(id) {
   var f = feedItems.find(function(x){ return x.id===id; });
   if(f) {
     f.liked = !f.liked;
@@ -2338,15 +2870,43 @@ function closeModal(name) {
 }
 
 function saveGoal() {
-  var name = document.getElementById('new-goal-name').value.trim();
-  var type = document.getElementById('new-goal-type').value;
-  if(!name) return;
-  goals.push({ id: Date.now(), name: name, type: type, pct: 0, days: '0 of 7', checked: false });
+  var nameEl = document.getElementById('new-goal-name');
+  var typeEl = document.getElementById('new-goal-type');
+  var tribeEl = document.getElementById('new-goal-tribe-id');
+  if(!nameEl) return;
+  var name = nameEl.value.trim();
+  var type = typeEl ? typeEl.value : 'fitness';
+  var tribeId = tribeEl ? tribeEl.value : null;
+  if(!name) { showToast('Please enter a goal name'); return; }
+
+  var newGoal = {
+    id: Date.now(), name: name, type: type,
+    pct: 0, days: '0 of 7', checked: false,
+    isChallenge: false, logType: 'standard',
+    liftedLbs: 0, targetLbs: 32000,
+    plankSecs: 0, miles: 0, meters: 0,
+    logHistory: []
+  };
+  goals.unshift(newGoal);
+
+  if(tribeId) {
+    var pact = myPacts.find(function(p){ return p.id === tribeId; });
+    if(pact) {
+      pact.activities.push({
+        id: 'a'+Date.now(), challengeId: 'custom-'+newGoal.id,
+        icon: type==='fitness'?'🏃':type==='habit'?'⚡':'🥗',
+        name: name, targetLabel: 'Custom',
+        targetVal: 100, unit: 'check-ins',
+        tribeTotal: 0, myTotal: 0, logType: 'standard'
+      });
+    }
+  }
+
   closeModal('add-goal');
-  document.getElementById('new-goal-name').value = '';
-  renderHomeGoals();
+  nameEl.value = '';
   renderGoalsFull();
-  showToast('🎯 Goal added! Share it with your tribe.');
+  renderPactCards();
+  showToast('🎯 "'+name+'" added to your tribe!');
 }
 
 function createTribe() {
@@ -2361,43 +2921,74 @@ function createTribe() {
 }
 
 /* ── TRIBE LEADER CREATION FLOW ── */
-var newTribeEmoji = '🏋️';
 var selectedTribeChallenges = {};
 var phoneCount = 1;
 
-function pickEmoji(el, emoji) {
-  document.querySelectorAll('.emoji-pick').forEach(function(e){ e.classList.remove('selected'); });
-  el.classList.add('selected');
-  newTribeEmoji = emoji;
+
+function goalRow(g, tag, tagClass) {
+  var sel = selectedTribeChallenges[g.id] ? ' selected' : '';
+  var chk = selectedTribeChallenges[g.id] ? '✓' : '';
+  return '<div class="ct-challenge-row'+sel+'" onclick="toggleCtChallenge(\''+g.id+'\')" id="ct-row-'+g.id+'">' +
+    '<div class="ct-checkbox" id="ct-chk-'+g.id+'">'+chk+'</div>' +
+    '<div style="font-size:22px;flex-shrink:0;">'+g.emoji+'</div>' +
+    '<div class="ct-challenge-row-info">' +
+      '<div class="ct-challenge-row-name">'+g.name+'</div>' +
+      '<div class="ct-challenge-row-sub">'+g.sub+'</div>' +
+    '</div>' +
+    '<div class="goal-tag '+tagClass+'">'+tag+'</div>' +
+  '</div>';
 }
 
 function renderCtChallenges() {
-  var html = tribeChallenges.map(function(c){
-    var sel = selectedTribeChallenges[c.id] ? ' selected' : '';
-    var chk = selectedTribeChallenges[c.id] ? '✓' : '';
-    return '<div class="ct-challenge-row'+sel+'" onclick="toggleCtChallenge(\''+c.id+'\')" id="ct-row-'+c.id+'">' +
-      '<div class="ct-checkbox" id="ct-chk-'+c.id+'">'+chk+'</div>' +
-      '<div style="font-size:24px;flex-shrink:0;">'+c.emoji+'</div>' +
-      '<div class="ct-challenge-row-info">' +
-        '<div class="ct-challenge-row-name">'+c.name+'</div>' +
-        '<div class="ct-challenge-row-sub">'+c.target+'</div>' +
-      '</div>' +
-      '<div class="challenge-difficulty '+c.diffClass+'">'+c.difficulty.toUpperCase()+'</div>' +
-    '</div>';
-  }).join('');
+  var c = goalCatalog;
+  var html =
+    catSection('collab', c.collaboration.label, c.collaboration.desc,
+      '<div class="goal-sub-label">Epic — no reset</div>' +
+      c.collaboration.epic.map(function(g){ return goalRow(g,'Epic','tag-epic'); }).join('') +
+      '<div class="goal-sub-label">Weekly — resets Monday</div>' +
+      c.collaboration.weekly.map(function(g){ return goalRow(g,'Weekly','tag-weekly'); }).join('')
+    ) +
+    catSection('comp', c.competition.label, c.competition.desc,
+      '<div class="goal-sub-label">Race — individual</div>' +
+      c.competition.goals.map(function(g){ return goalRow(g,'Race','tag-race'); }).join('')
+    ) +
+    catSection('common', c.common.label, c.common.desc,
+      '<div class="goal-sub-label">Resets Monday · all members</div>' +
+      c.common.goals.map(function(g){ return goalRow(g,'Common','tag-common'); }).join('')
+    );
   document.getElementById('ct-challenge-list').innerHTML = html;
+  // open first category by default
+  toggleCatSection('collab');
+}
+
+function catSection(id, label, desc, content) {
+  return '<div>' +
+    '<div class="goal-cat-header" onclick="toggleCatSection(\''+id+'\')">' +
+      '<div><div class="goal-cat-label">'+label+'</div><div class="goal-cat-desc">'+desc+'</div></div>' +
+      '<div class="goal-cat-arrow" id="cat-arrow-'+id+'">▶</div>' +
+    '</div>' +
+    '<div class="goal-cat-body" id="cat-body-'+id+'">'+content+'</div>' +
+  '</div>';
+}
+
+function toggleCatSection(id) {
+  var body = document.getElementById('cat-body-'+id);
+  var arrow = document.getElementById('cat-arrow-'+id);
+  if(!body) return;
+  var open = body.classList.toggle('open');
+  if(arrow) arrow.classList.toggle('open', open);
 }
 
 function toggleCtChallenge(id) {
   selectedTribeChallenges[id] = !selectedTribeChallenges[id];
   var row = document.getElementById('ct-row-'+id);
   var chk = document.getElementById('ct-chk-'+id);
-  if(selectedTribeChallenges[id]){
-    row.classList.add('selected');
-    chk.textContent = '✓';
+  if(selectedTribeChallenges[id]) {
+    if(row) row.classList.add('selected');
+    if(chk) chk.textContent = '✓';
   } else {
-    row.classList.remove('selected');
-    chk.textContent = '';
+    if(row) row.classList.remove('selected');
+    if(chk) chk.textContent = '';
   }
 }
 
@@ -2466,10 +3057,18 @@ function finalizeTribe() {
   var phones = [];
   document.querySelectorAll('.phone-inp').forEach(function(inp){ if(inp.value.trim()) phones.push(inp.value.trim()); });
 
-  var ticMap = {'🏋️':'ti-pink','🏃':'ti-green','🚴':'ti-green','🧘':'ti-blue','🥗':'ti-amber','🔥':'ti-pink','⚡':'ti-blue','🚣':'ti-blue','🛣️':'ti-amber','💪':'ti-pink'};
+  // determine category tag for each chosen goal
+  function getCatTag(id) {
+    var cat = goalCatalog;
+    if(cat.collaboration.epic.find(function(g){ return g.id===id; })) return { cat:'collaboration', sub:'epic' };
+    if(cat.collaboration.weekly.find(function(g){ return g.id===id; })) return { cat:'collaboration', sub:'weekly' };
+    if(cat.competition.goals.find(function(g){ return g.id===id; })) return { cat:'competition', sub:'race' };
+    if(cat.common.goals.find(function(g){ return g.id===id; })) return { cat:'common', sub:'common' };
+    return { cat:'collaboration', sub:'epic' };
+  }
+
   var newTribe = {
-    id: Date.now(), emoji: newTribeEmoji,
-    tic: ticMap[newTribeEmoji] || 'ti-green',
+    id: Date.now(), emoji: '🏕️', tic: 'ti-green',
     name: name, sub: desc || chosen.map(function(c){ return c.name; }).join(' · '),
     members: ['JD'], total: 1, joined: true, isLeader: true,
     challenges: chosen.map(function(c){ return c.id; })
@@ -2477,18 +3076,23 @@ function finalizeTribe() {
   tribes.unshift(newTribe);
 
   var pactActivities = chosen.map(function(c, i) {
+    var catInfo = getCatTag(c.id);
     return {
       id: 'a'+Date.now()+i, challengeId: c.id,
       icon: c.emoji, name: c.name,
-      targetLabel: c.stats[0].num,
-      targetVal: c.logType==='lift' ? 32000 : c.logType==='plank' ? 28800 : 2448,
-      unit: c.logType==='lift'?'lbs':c.logType==='plank'?'secs':'mi',
-      tribeTotal: 0, myTotal: 0, logType: c.logType || 'standard'
+      targetLabel: c.targetLabel,
+      targetVal: c.targetVal,
+      unit: c.unit,
+      tribeTotal: 0, myTotal: 0,
+      logType: c.logType || 'standard',
+      category: catInfo.cat,
+      subType: catInfo.sub,
+      resetWeekly: c.resetWeekly || false
     };
   });
 
   var newPact = {
-    id: 'p'+Date.now(), name: name, emoji: newTribeEmoji,
+    id: 'p'+Date.now(), name: name, emoji: '🏕️',
     isLeader: true,
     members: [{i:'JD', c:'av-a'}],
     activities: pactActivities
@@ -2496,7 +3100,6 @@ function finalizeTribe() {
   myPacts.push(newPact);
 
   selectedTribeChallenges = {};
-  newTribeEmoji = '🏋️';
   document.getElementById('ct-step-3').style.display = 'none';
   document.getElementById('ct-step-1').style.display = 'block';
   closeModal('create-tribe');
@@ -2506,6 +3109,146 @@ function finalizeTribe() {
     : '🚀 '+name+' is live! Share your join code with the crew.';
   showToast(msg);
   showScreen('home');
+}
+
+var currentAtgPactId = null;
+var currentCustomCat = 'collaboration';
+
+function switchAtgTab(tab) {
+  document.getElementById('atg-tab-existing').classList.toggle('active', tab==='existing');
+  document.getElementById('atg-tab-custom').classList.toggle('active', tab==='custom');
+  document.getElementById('atg-existing').style.display = tab==='existing' ? 'block' : 'none';
+  document.getElementById('atg-custom').style.display   = tab==='custom'   ? 'block' : 'none';
+}
+
+function selectCustomCat(cat) {
+  currentCustomCat = cat;
+  ['collaboration','competition','common'].forEach(function(c){
+    var el = document.getElementById('custom-cat-'+({'collaboration':'collab','competition':'comp','common':'common'}[c]));
+    if(el) {
+      el.style.border = c===cat ? '1.5px solid var(--tribe)' : '1.5px solid var(--border)';
+      el.style.background = c===cat ? 'var(--lightest)' : 'transparent';
+      el.querySelector('div').style.color = c===cat ? 'var(--forest)' : 'var(--text)';
+    }
+  });
+}
+
+function saveCustomTribeGoal() {
+  var name    = (document.getElementById('custom-goal-name').value || '').trim();
+  var target  = (document.getElementById('custom-goal-target').value || '').trim();
+  var emoji   = (document.getElementById('custom-goal-emoji').value || '').trim() || '🎯';
+  var weekly  = document.getElementById('custom-goal-weekly').checked;
+  var pactId  = currentAtgPactId;
+
+  if(!name)   { showToast('Please enter a goal name'); return; }
+  if(!target) { showToast('Please enter a target'); return; }
+
+  var pact = myPacts.find(function(p){ return p.id === pactId; });
+  if(!pact) return;
+
+  var catMap = { collaboration:'collaboration', competition:'competition', common:'common' };
+  var subMap = { collaboration:'epic', competition:'race', common:'common' };
+  if(weekly && currentCustomCat==='collaboration') subMap.collaboration = 'weekly';
+
+  var tagMap = { collaboration:'tag-epic', competition:'tag-race', common:'tag-common' };
+  var customId = 'custom-'+Date.now();
+
+  pact.activities.push({
+    id: 'a'+Date.now(), challengeId: customId,
+    icon: emoji, name: name,
+    targetLabel: target, targetVal: 100,
+    unit: 'custom', tribeTotal: 0, myTotal: 0,
+    logType: 'standard',
+    category: catMap[currentCustomCat],
+    subType: subMap[currentCustomCat],
+    resetWeekly: weekly,
+    isCustom: true
+  });
+
+  // Reset form
+  document.getElementById('custom-goal-name').value  = '';
+  document.getElementById('custom-goal-target').value = '';
+  document.getElementById('custom-goal-emoji').value  = '';
+  document.getElementById('custom-goal-weekly').checked = false;
+  selectCustomCat('collaboration');
+  switchAtgTab('existing');
+
+  closeModal('add-tribe-goal');
+  showToast(emoji+' "'+name+'" added to '+pact.name+'!');
+  renderPactCards();
+  openPactDetail(pactId);
+}
+
+function openAddTribeGoal(pactId) {
+  currentAtgPactId = pactId;
+  var pact = myPacts.find(function(p){ return p.id === pactId; });
+  if(!pact) return;
+  var existingIds = pact.activities.map(function(a){ return a.challengeId; });
+  var available = tribeChallenges.filter(function(c){ return existingIds.indexOf(c.id) === -1; });
+
+  function catRow(catLabel, catClass, goals) {
+    if(!goals.length) return '';
+    return '<div class="goal-sub-label" style="padding:10px 4px 4px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;">'+catLabel+'</div>' +
+      goals.map(function(g){
+        return '<div class="ct-challenge-row" style="margin-bottom:6px;" onclick="addGoalToTribe(\''+pactId+'\',\''+g.id+'\')">' +
+          '<div style="font-size:22px;flex-shrink:0;">'+g.emoji+'</div>' +
+          '<div class="ct-challenge-row-info">' +
+            '<div class="ct-challenge-row-name">'+g.name+'</div>' +
+            '<div class="ct-challenge-row-sub">'+g.sub+'</div>' +
+          '</div>' +
+          '<div class="goal-tag '+catClass+'">'+catLabel+'</div>' +
+        '</div>';
+      }).join('');
+  }
+
+  var colEpic  = available.filter(function(g){ return goalCatalog.collaboration.epic.find(function(x){ return x.id===g.id; }); });
+  var colWeek  = available.filter(function(g){ return goalCatalog.collaboration.weekly.find(function(x){ return x.id===g.id; }); });
+  var comp     = available.filter(function(g){ return goalCatalog.competition.goals.find(function(x){ return x.id===g.id; }); });
+  var common   = available.filter(function(g){ return goalCatalog.common.goals.find(function(x){ return x.id===g.id; }); });
+
+  var html = '';
+  html += catRow('Epic', 'tag-epic', colEpic);
+  html += catRow('Weekly', 'tag-weekly', colWeek);
+  html += catRow('Race', 'tag-race', comp);
+  html += catRow('Common', 'tag-common', common);
+
+  if(!html) {
+    html = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:14px;">All available goals are already in this tribe! 🎉</div>';
+  }
+
+  document.getElementById('add-tribe-goal-list').innerHTML = html;
+  switchAtgTab('existing');
+  openModal('add-tribe-goal');
+}
+
+function addGoalToTribe(pactId, goalId) {
+  var pact = myPacts.find(function(p){ return p.id === pactId; });
+  var g = tribeChallenges.find(function(c){ return c.id === goalId; });
+  if(!pact || !g) return;
+
+  function getCatInfo(id) {
+    if(goalCatalog.collaboration.epic.find(function(x){ return x.id===id; }))   return { cat:'collaboration', sub:'epic' };
+    if(goalCatalog.collaboration.weekly.find(function(x){ return x.id===id; })) return { cat:'collaboration', sub:'weekly' };
+    if(goalCatalog.competition.goals.find(function(x){ return x.id===id; }))    return { cat:'competition',   sub:'race' };
+    if(goalCatalog.common.goals.find(function(x){ return x.id===id; }))         return { cat:'common',        sub:'common' };
+    return { cat:'collaboration', sub:'epic' };
+  }
+
+  var catInfo = getCatInfo(goalId);
+  pact.activities.push({
+    id: 'a'+Date.now(), challengeId: g.id,
+    icon: g.emoji, name: g.name,
+    targetLabel: g.targetLabel, targetVal: g.targetVal, unit: g.unit,
+    tribeTotal: 0, myTotal: 0,
+    logType: g.logType || 'standard',
+    category: catInfo.cat, subType: catInfo.sub,
+    resetWeekly: g.resetWeekly || false
+  });
+
+  closeModal('add-tribe-goal');
+  showToast(g.emoji+' "'+g.name+'" added to '+pact.name+'!');
+  renderPactCards();
+  openPactDetail(pactId);
 }
 
 function joinByCode() {
